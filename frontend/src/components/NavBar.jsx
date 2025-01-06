@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState('');
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+
+  const services = [
+    'Plastic septic tanks',
+    'Sale of Biodigester Enzymes',
+    'Waste Water management',
+    'Bio digester installation'
+  ];
 
   const styles = {
     nav: {
@@ -13,81 +22,157 @@ const Navbar = () => {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '1rem 2rem',
-      backgroundColor: 'rgba(143, 168, 133, 0.95)', // Pale green with transparency
-      backdropFilter: 'blur(5px)',
+      backgroundColor: 'rgba(0, 77, 64, 0.95)',
+      backdropFilter: 'blur(8px)',
       zIndex: 1000,
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
     },
     logo: {
-      fontSize: '1.5rem',
+      fontSize: '1.8rem',
       fontWeight: 'bold',
-      color: '#4A4238', 
+      color: '#FFA500',
       cursor: 'pointer',
+      textDecoration: 'none',
       transition: 'transform 0.3s ease',
-      transform: isHovered === 'logo' ? 'scale(1.05)' : 'scale(1)',
     },
     links: {
       display: 'flex',
-      gap: '1.5rem',
+      gap: '2rem',
       alignItems: 'center',
     },
-    link: (linkName) => ({
-      color: '#4A4238', // Deep brown
+    link: {
+      color: 'white',
       textDecoration: 'none',
       fontSize: '1rem',
       padding: '0.5rem 1rem',
       borderRadius: '4px',
       transition: 'all 0.3s ease',
-      backgroundColor: isHovered === linkName ? 'rgba(229, 220, 195, 0.3)' : 'transparent',
-      transform: isHovered === linkName ? 'translateY(-2px)' : 'translateY(0)',
-    }),
+      position: 'relative',
+    },
+    servicesContainer: {
+      position: 'relative',
+    },
+    dropdown: {
+      position: 'absolute',
+      top: '100%',
+      left: '0',
+      backgroundColor: 'rgba(0, 77, 64, 0.98)',
+      borderRadius: '8px',
+      padding: '0.5rem',
+      marginTop: '0.5rem',
+      minWidth: '250px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+    },
+    dropdownItem: {
+      color: 'white',
+      padding: '0.75rem 1rem',
+      textDecoration: 'none',
+      display: 'block',
+      borderRadius: '4px',
+      transition: 'all 0.2s ease',
+    },
     button: {
-      backgroundColor: '#4A4238', // Deep brown
-      color: '#E5DCC3', // Warm beige
+      backgroundColor: '#FFA500',
+      color: 'white',
       border: 'none',
-      padding: '0.5rem 1.5rem',
+      padding: '0.75rem 1.5rem',
       borderRadius: '5px',
       cursor: 'pointer',
       fontSize: '1rem',
+      fontWeight: '500',
       transition: 'all 0.3s ease',
-      transform: isHovered === 'button' ? 'translateY(-2px)' : 'translateY(0)',
-      boxShadow: isHovered === 'button' 
-        ? '0 4px 12px rgba(74, 66, 56, 0.2)' 
-        : '0 2px 4px rgba(74, 66, 56, 0.1)',
     },
   };
 
   return (
     <nav style={styles.nav}>
-      <div 
-        style={styles.logo}
+      <Link
+        to="/"
+        style={{
+          ...styles.logo,
+          transform: isHovered === 'logo' ? 'scale(1.05)' : 'scale(1)',
+        }}
         onMouseEnter={() => setIsHovered('logo')}
         onMouseLeave={() => setIsHovered('')}
       >
         BioDynamics
-      </div>
+      </Link>
       <div style={styles.links}>
-        {['Home', 'About Us', 'Our Services', 'Blog and Articles', 'Contact'].map((link) => (
-          <a
+        {['Home', 'About Us', 'Blog and Articles', 'Contact'].map((link) => (
+          <Link
             key={link}
-            href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
-            style={styles.link(link)}
+            to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
+            style={{
+              ...styles.link,
+              backgroundColor: isHovered === link ? 'rgba(255, 165, 0, 0.1)' : 'transparent',
+              transform: isHovered === link ? 'translateY(-2px)' : 'translateY(0)',
+            }}
             onMouseEnter={() => setIsHovered(link)}
             onMouseLeave={() => setIsHovered('')}
           >
             {link}
-          </a>
+          </Link>
         ))}
-        <button 
-          style={styles.button}
+        <div
+          style={styles.servicesContainer}
+          onMouseEnter={() => {
+            setIsHovered('Services');
+            setIsServicesOpen(true);
+          }}
+          onMouseLeave={() => {
+            setIsHovered('');
+            setIsServicesOpen(false);
+          }}
+        >
+          <span
+            style={{
+              ...styles.link,
+              color: isServicesOpen ? '#FFA500' : 'white',
+              backgroundColor: isHovered === 'Services' ? 'rgba(255, 165, 0, 0.1)' : 'transparent',
+              transform: isHovered === 'Services' ? 'translateY(-2px)' : 'translateY(0)',
+            }}
+          >
+            Our Services
+          </span>
+          {isServicesOpen && (
+            <div style={styles.dropdown}>
+              {services.map((service) => (
+                <Link
+                  key={service}
+                  to={`/services/${service.toLowerCase().replace(/\s+/g, '-')}`}
+                  style={styles.dropdownItem}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
+                    e.target.style.color = '#FFA500';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = 'white';
+                  }}
+                >
+                  {service}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        <Link
+          to="/login"
+          style={{
+            ...styles.button,
+            transform: isHovered === 'button' ? 'translateY(-2px)' : 'translateY(0)',
+            boxShadow: isHovered === 'button'
+              ? '0 4px 12px rgba(255, 165, 0, 0.3)'
+              : '0 2px 4px rgba(255, 165, 0, 0.1)',
+          }}
           onMouseEnter={() => setIsHovered('button')}
           onMouseLeave={() => setIsHovered('')}
         >
           Sign Up / Login
-        </button>
+        </Link>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-

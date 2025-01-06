@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState('');
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
@@ -94,11 +95,12 @@ const Navbar = () => {
         }}
         onMouseEnter={() => setIsHovered('logo')}
         onMouseLeave={() => setIsHovered('')}
+        onClick={() => navigate('/')}
       >
         BioDynamics
       </Link>
       <div style={styles.links}>
-        {['Home', 'About Us', 'Blog and Articles', 'Contact'].map((link) => (
+        {['Home', 'About Us', 'Blog and Articles', 'Contact', 'Shop'].map((link) => (
           <Link
             key={link}
             to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
@@ -176,3 +178,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

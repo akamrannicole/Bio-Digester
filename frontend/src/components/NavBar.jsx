@@ -100,10 +100,10 @@ const Navbar = () => {
         BioDynamics
       </Link>
       <div style={styles.links}>
-        {['Home', 'About Us', 'Blog and Articles', 'Contact', 'Shop'].map((link) => (
+        {['Home', 'About Us', 'Blog and Articles', 'ContactUs', 'Shop'].map((link) => (
           <Link
             key={link}
-            to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
+            to={link === 'Home' ? '/' : link === 'ContactUs' ? '/contact-us' : `/${link.toLowerCase().replace(/\s+/g, '-')}`}
             style={{
               ...styles.link,
               backgroundColor: isHovered === link ? 'rgba(255, 165, 0, 0.1)' : 'transparent',

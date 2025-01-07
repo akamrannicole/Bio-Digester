@@ -6,6 +6,7 @@ import AboutUs from './pages/AboutUsPage';
 import BlogsAndArticles from './pages/BlogsAndArticles';
 import BlogPost from './pages/BlogPost';
 import ContactUs from './pages/ContactUs';
+import ShopPage from './pages/ShopPage';
 
 const App = () => {
   const styles = {
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/blog-and-articles" element={<BlogsAndArticles />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/contact-us" element={<ContactUs/>} />
+          <Route path="/shop" element={<ShopPage/>} />
 
         </Routes>
       </div>

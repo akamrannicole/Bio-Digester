@@ -4,7 +4,7 @@ import Navbar from './components/NavBar';
 import HeroSection from './components/HeroSection';
 import AboutUs from './pages/AboutUsPage';
 import BlogsAndArticles from './pages/BlogsAndArticles';
-
+import BlogPost from './pages/BlogPost';
 
 const App = () => {
   const styles = {
@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/" element={<HeroSection />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/blog-and-articles" element={<BlogsAndArticles />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
 
         </Routes>
       </div>

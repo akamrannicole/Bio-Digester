@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const BlogsAndArticles = () => {
   const styles = {
@@ -36,6 +37,8 @@ const BlogsAndArticles = () => {
       boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      textDecoration: 'none',
+      color: 'inherit',
     },
     cardImage: {
       width: '100%',
@@ -92,7 +95,7 @@ const BlogsAndArticles = () => {
       id: 3,
       title: "Biodigester Enzymes: The Key to Efficient Waste Breakdown",
       excerpt: "Learn about the crucial role of enzymes in optimizing biodigester performance...",
-      image: "https://www.rodburn.com.au/wp-content/uploads/2024/04/3.78L-Bio-Enzymatic-Bacteria-Enzyme-Digester.jpg",
+      image: "https://imaginecare.co.ke/wp-content/uploads/2022/12/bio-digester-bacteria-bio-digester-kenya-1-Bio-Digester-Bacteria.webp",
       date: "March 10, 2025",
       tag: "Technology",
     },
@@ -128,12 +131,6 @@ const BlogsAndArticles = () => {
     transition: { duration: 0.5 }
   };
 
-  const handleCardClick = (id) => {
-    // In a real application, this would navigate to the specific blog post
-    console.log(`Navigating to blog post with id: ${id}`);
-    alert(`You clicked on the blog post with id: ${id}`);
-  };
-
   return (
     <div style={styles.container}>
       <motion.header style={styles.header} {...fadeInUp}>
@@ -145,24 +142,24 @@ const BlogsAndArticles = () => {
         {blogPosts.map((post, index) => (
           <motion.div
             key={post.id}
-            style={styles.card}
             whileHover={{
               scale: 1.03,
               boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
             }}
-            onClick={() => handleCardClick(post.id)}
             {...fadeInUp}
             transition={{ delay: index * 0.1 }}
           >
-            <img src={post.image} alt={post.title} style={styles.cardImage} />
-            <div style={styles.cardContent}>
-              <h2 style={styles.cardTitle}>{post.title}</h2>
-              <p style={styles.cardExcerpt}>{post.excerpt}</p>
-              <div style={styles.cardMeta}>
-                <span>{post.date}</span>
-                <span style={styles.tag}>{post.tag}</span>
+            <Link to={`/blog/${post.id}`} style={styles.card}>
+              <img src={post.image} alt={post.title} style={styles.cardImage} />
+              <div style={styles.cardContent}>
+                <h2 style={styles.cardTitle}>{post.title}</h2>
+                <p style={styles.cardExcerpt}>{post.excerpt}</p>
+                <div style={styles.cardMeta}>
+                  <span>{post.date}</span>
+                  <span style={styles.tag}>{post.tag}</span>
+                </div>
               </div>
-            </div>
+            </Link>
           </motion.div>
         ))}
       </motion.div>

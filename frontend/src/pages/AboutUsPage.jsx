@@ -7,7 +7,7 @@ const AboutUs = () => {
       maxWidth: '1700px',
       margin: '0 auto',
       padding: '6rem 2rem',
-      backgroundColor: 'white',
+      backgroundColor: '#f0f8ff',
       color: '#333',
       fontFamily: "'Poppins', sans-serif",
     },

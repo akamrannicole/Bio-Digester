@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, createGlobalStyle } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Icons (replace with actual icon components or SVGs in a real project)
-const ShoppingCartIcon = () => <span>🛒</span>;
-const HeartIcon = () => <span>❤️</span>;
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+  }
+`;
 
-// Dummy product data
+const ShoppingCartIcon = () => <span style={{ fontSize: '18px' }}>🛒</span>;
+const HeartIcon = () => <span style={{ fontSize: '18px' }}>❤️</span>;
+
 const products = [
   {
     id: 1,
     name: 'Biodigester Tank',
     category: 'tanks',
-    price: 219998.90,
+    price: 38500,
     image: '/placeholder.svg?height=200&width=200&text=Biodigester+Tank',
     description: 'High-capacity Biodigester Tank for large households or small communities. Efficiently breaks down organic waste, producing biogas for cooking and heating.',
   },
@@ -74,13 +80,11 @@ const products = [
   },
 ];
 
-// Animations
 const fadeIn = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
 `;
 
-// Styled components
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -139,7 +143,7 @@ const FilterSortContainer = styled.div`
   align-items: center;
   margin-bottom: 2rem;
   padding: 1rem;
-  background-color: #f0f8ff;
+  background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
@@ -500,23 +504,26 @@ const ShopPage = () => {
   );
 
   return (
-    <Container>
-      <Header>
-        <Title>Biodigester Shop</Title>
-        <IconContainer>
-          <CartIcon />
-          <WishlistIcon />
-        </IconContainer>
-      </Header>
-      <FilterSort />
-      <ProductsGrid>
-        {filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </ProductsGrid>
-      <CartModal />
-      <WishlistModal />
-    </Container>
+    <>
+      <GlobalStyle />
+      <Container>
+        <Header>
+          <Title>Biodigester Shop</Title>
+          <IconContainer>
+            <CartIcon />
+            <WishlistIcon />
+          </IconContainer>
+        </Header>
+        <FilterSort />
+        <ProductsGrid>
+          {filteredProducts.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </ProductsGrid>
+        <CartModal />
+        <WishlistModal />
+      </Container>
+    </>
   );
 };
 

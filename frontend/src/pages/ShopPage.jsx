@@ -19,7 +19,7 @@ const products = [
     name: 'Biodigester Tank',
     category: 'tanks',
     price: 38500,
-    image: '/placeholder.svg?height=200&width=200&text=Biodigester+Tank',
+    image: '',
     description: 'High-capacity Biodigester Tank for large households or small communities. Efficiently breaks down organic waste, producing biogas for cooking and heating.',
   },
   {
@@ -27,7 +27,7 @@ const products = [
     name: 'Enzyme Mix',
     category: 'additives',
     price: 5498.90,
-    image: '/placeholder.svg?height=200&width=200&text=Enzyme+Mix',
+    image: 'https://i.pinimg.com/736x/90/6a/3c/906a3c2e0ec8f5bcb51955953d00d55a.jpg',
     description: 'Specially formulated Enzyme Mix to boost biodigester performance. Accelerates organic matter breakdown, increases gas production, and reduces odors.',
   },
   {

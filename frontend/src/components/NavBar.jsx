@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
+import styled from 'styled-components';
+
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const ProfilePicture = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #FFA500;
+`;
+
+const WelcomeText = styled.span`
+  color: white;
+  font-size: 1rem;
+`;
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState('');
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const { user, logout } = useContext(UserContext);
 
   const services = [
     'Plastic septic tanks',
@@ -158,20 +180,47 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <Link
-          to="/login"
-          style={{
-            ...styles.button,
-            transform: isHovered === 'button' ? 'translateY(-2px)' : 'translateY(0)',
-            boxShadow: isHovered === 'button'
-              ? '0 4px 12px rgba(255, 165, 0, 0.3)'
-              : '0 2px 4px rgba(255, 165, 0, 0.1)',
-          }}
-          onMouseEnter={() => setIsHovered('button')}
-          onMouseLeave={() => setIsHovered('')}
-        >
-          Sign Up / Login
-        </Link>
+        {user ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <img
+              src={user.profilePicture}
+              alt={user.name}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '2px solid #FFA500',
+              }}
+            />
+            <span style={{ color: 'white' }}>Welcome, {user.name}</span>
+            <button
+              onClick={logout}
+              style={{
+                ...styles.button,
+                backgroundColor: 'transparent',
+                border: '2px solid #FFA500',
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            style={{
+              ...styles.button,
+              transform: isHovered === 'button' ? 'translateY(-2px)' : 'translateY(0)',
+              boxShadow: isHovered === 'button'
+                ? '0 4px 12px rgba(255, 165, 0, 0.3)'
+                : '0 2px 4px rgba(255, 165, 0, 0.1)',
+            }}
+            onMouseEnter={() => setIsHovered('button')}
+            onMouseLeave={() => setIsHovered('')}
+          >
+            Sign Up / Login
+          </Link>
+        )}
       </div>
     </nav>
   );

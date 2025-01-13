@@ -1,27 +1,29 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from './UserContext';
-import styled from 'styled-components';
 
-const UserInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
+// Create UserContext
+const UserContext = createContext();
 
-const ProfilePicture = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #FFA500;
-`;
+// UserProvider component
+const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-const WelcomeText = styled.span`
-  color: white;
-  font-size: 1rem;
-`;
+  const login = (userData) => {
+    setUser(userData);
+  };
 
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+// Navbar component
 const Navbar = () => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState('');
@@ -119,7 +121,7 @@ const Navbar = () => {
         onMouseLeave={() => setIsHovered('')}
         onClick={() => navigate('/')}
       >
-        BioDynamics
+       Mg BioDigesters
       </Link>
       <div style={styles.links}>
         {['Home', 'About Us', 'Blog and Articles', 'Contact Us', 'Shop'].map((link) => (
@@ -226,5 +228,12 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+// Wrap Navbar with UserProvider
+const NavbarWithContext = () => (
+  <UserProvider>
+    <Navbar />
+  </UserProvider>
+);
+
+export default NavbarWithContext;
 

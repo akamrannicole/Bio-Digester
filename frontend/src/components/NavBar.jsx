@@ -47,18 +47,26 @@ const Navbar = () => {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '1rem 2rem',
-      backgroundColor: 'rgba(0, 77, 64, 0.95)',
+      background: 'linear-gradient(to right, rgba(163, 22, 33, 0.8), rgba(163, 22, 33, 0.6))',
       backdropFilter: 'blur(8px)',
       zIndex: 1000,
       boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      transition: 'background 0.3s ease',
     },
     logo: {
+      display: 'flex',
+      alignItems: 'center',
       fontSize: '1.8rem',
       fontWeight: 'bold',
-      color: '#FFA500',
+      color: '#FFFFFF',
       cursor: 'pointer',
       textDecoration: 'none',
       transition: 'transform 0.3s ease',
+    },
+    logoIcon: {
+      width: '40px',
+      height: '40px',
+      marginRight: '10px',
     },
     links: {
       display: 'flex',
@@ -81,7 +89,7 @@ const Navbar = () => {
       position: 'absolute',
       top: '100%',
       left: '0',
-      backgroundColor: 'rgba(0, 77, 64, 0.98)',
+      background: 'linear-gradient(to bottom, rgba(163, 22, 33, 0.9), rgba(163, 22, 33, 0.7))',
       borderRadius: '8px',
       padding: '0.5rem',
       marginTop: '0.5rem',
@@ -97,9 +105,9 @@ const Navbar = () => {
       transition: 'all 0.2s ease',
     },
     button: {
-      backgroundColor: '#FFA500',
-      color: 'white',
-      border: 'none',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      color: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
       padding: '0.75rem 1.5rem',
       borderRadius: '5px',
       cursor: 'pointer',
@@ -121,7 +129,12 @@ const Navbar = () => {
         onMouseLeave={() => setIsHovered('')}
         onClick={() => navigate('/')}
       >
-       Mg BioDigesters
+        <svg style={styles.logoIcon} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" stroke="white" strokeWidth="5"/>
+          <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white"/>
+          <path d="M40 50 L50 40 L60 50 L50 60 Z" fill="#A31621"/>
+        </svg>
+        Mg BioDigesters
       </Link>
       <div style={styles.links}>
         {['Home', 'About Us', 'Blog and Articles', 'Contact Us', 'Shop'].map((link) => (
@@ -130,7 +143,7 @@ const Navbar = () => {
             to={link === 'Home' ? '/' : `/${link.toLowerCase().replace(/\s+/g, '-')}`}
             style={{
               ...styles.link,
-              backgroundColor: isHovered === link ? 'rgba(255, 165, 0, 0.1)' : 'transparent',
+              backgroundColor: isHovered === link ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
               transform: isHovered === link ? 'translateY(-2px)' : 'translateY(0)',
             }}
             onMouseEnter={() => setIsHovered(link)}
@@ -153,8 +166,8 @@ const Navbar = () => {
           <span
             style={{
               ...styles.link,
-              color: isServicesOpen ? '#FFA500' : 'white',
-              backgroundColor: isHovered === 'Services' ? 'rgba(255, 165, 0, 0.1)' : 'transparent',
+              color: isServicesOpen ? '#FFFFFF' : 'white',
+              backgroundColor: isHovered === 'Services' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
               transform: isHovered === 'Services' ? 'translateY(-2px)' : 'translateY(0)',
             }}
           >
@@ -168,8 +181,8 @@ const Navbar = () => {
                   to={`/services/${service.toLowerCase().replace(/\s+/g, '-')}`}
                   style={styles.dropdownItem}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
-                    e.target.style.color = '#FFA500';
+                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    e.target.style.color = '#FFFFFF';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.backgroundColor = 'transparent';
@@ -185,14 +198,14 @@ const Navbar = () => {
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <img
-              src={user.profilePicture}
+              src={user.profilePicture || "/placeholder.svg"}
               alt={user.name}
               style={{
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
                 objectFit: 'cover',
-                border: '2px solid #FFA500',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
               }}
             />
             <span style={{ color: 'white' }}>Welcome, {user.name}</span>
@@ -201,7 +214,8 @@ const Navbar = () => {
               style={{
                 ...styles.button,
                 backgroundColor: 'transparent',
-                border: '2px solid #FFA500',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: '#FFFFFF',
               }}
             >
               Logout
@@ -214,8 +228,8 @@ const Navbar = () => {
               ...styles.button,
               transform: isHovered === 'button' ? 'translateY(-2px)' : 'translateY(0)',
               boxShadow: isHovered === 'button'
-                ? '0 4px 12px rgba(255, 165, 0, 0.3)'
-                : '0 2px 4px rgba(255, 165, 0, 0.1)',
+                ? '0 4px 12px rgba(255, 255, 255, 0.2)'
+                : '0 2px 4px rgba(255, 255, 255, 0.1)',
             }}
             onMouseEnter={() => setIsHovered('button')}
             onMouseLeave={() => setIsHovered('')}

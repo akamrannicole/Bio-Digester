@@ -1,210 +1,568 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import styled from 'styled-components';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHeart } from 'react-icons/fa';
 
 const HeroSection = () => {
-  const styles = {
-    hero: {
-      position: 'relative',
-      height: '100vh',
-      width: '100%',
-      overflow: 'hidden',
-      backgroundColor: '#004d40',
-      color: 'white',
-      display: 'flex',
-      alignItems: 'center',
-    },
-    backgroundImage: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      opacity: 0.4,
-    },
-    content: {
-      position: 'relative',
-      zIndex: 2,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '0 2rem',
-    },
-    textContent: {
-      flex: '1',
-      maxWidth: '600px',
-    },
-    welcome: {
-      color: '#FFA500',
-      fontSize: '1.2rem',
-      fontWeight: 500,
-      display: 'flex',
-      alignItems: 'center',
-      gap: '1rem',
-      marginBottom: '2rem',
-    },
-    welcomeLine: {
-      width: '3rem',
-      height: '2px',
-      backgroundColor: '#FFA500',
-    },
-    heading: {
-      fontSize: '4rem',
-      fontWeight: 'bold',
-      lineHeight: 1.2,
-      marginBottom: '1rem',
-    },
-    highlight: {
-      color: '#FFA500',
-      display: 'inline-block',
-    },
-    subheading: {
-      fontSize: '1.5rem',
-      marginBottom: '3rem',
-      lineHeight: 1.6,
-    },
-    buttonContainer: {
-      display: 'flex',
-      gap: '1rem',
-    },
-    button: {
-      padding: '1rem 2rem',
-      fontSize: '1.1rem',
-      fontWeight: 500,
-      borderRadius: '4px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      border: 'none',
-    },
-    primaryButton: {
-      backgroundColor: '#FFA500',
-      color: 'white',
-    },
-    secondaryButton: {
-      backgroundColor: '#003329',
-      color: 'white',
-    },
-    arrow: {
-      marginLeft: '0.5rem',
-    },
-    imageContainer: {
-      flex: '1',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-    },
-    rightImage: {
-      maxWidth: '100%',
-      height: 'auto',
-      borderRadius: '10px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-    },
-  };
+  const [currentTestimonialSet, setCurrentTestimonialSet] = useState(0);
+  const [currentGallerySet, setCurrentGallerySet] = useState(0);
 
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  };
+  const testimonials = [
+    [
+      {
+        name: "David Kimutai",
+        role: "Green Energy Co.",
+        text: "The biodigester has revolutionized our waste management process. We're now producing clean energy and reducing our carbon footprint!",
+        image: "https://i.pinimg.com/474x/69/17/bf/6917bf565c2dcf2e6edd029b199557ac.jpg"
+      },
+      {
+        name: "Jane Nyasenya",
+        role: "Eco Farms",
+        text: "Our farm has become more sustainable thanks to this innovative solution. It's a game-changer for the agricultural sector.",
+        image: "https://i.pinimg.com/474x/e4/02/9c/e4029cb1ff448efd7631ea0a1a4c4f71.jpg"
+      },
+      {
+        name: "Mike Johnson",
+        role: "City Waste Management",
+        text: "Implementing these biodigesters has significantly reduced our city's landfill usage. It's a win for the environment and our community.",
+        image: "https://i.pinimg.com/474x/96/9b/b3/969bb3701cbfbabe77a2860cf8b1e7fa.jpg"
+      }
+    ],
+    [
+      {
+        name: "Sarah Wilson",
+        role: "Environmental Consultant",
+        text: "The efficiency of these biodigesters is remarkable. They're setting new standards in waste management.",
+        image: "https://i.pinimg.com/474x/14/c5/c3/14c5c36bdf8cd719d568af4994fadcde.jpg"
+      },
+      {
+        name: "David Chen",
+        role: "Sustainability Director",
+        text: "A game-changing solution that delivers on its promises. The results speak for themselves.",
+        image: "https://i.pinimg.com/474x/66/f8/5d/66f85dd00a6530af9c23098a3d5b0d42.jpg"
+      },
+      {
+        name: "Emma Atieno",
+        role: "Operations Manager",
+        text: "The implementation was smooth and the benefits were immediate. Highly recommended.",
+        image: "https://i.pinimg.com/474x/4e/7e/6f/4e7e6f550d668061927603c68d873036.jpg"
+      }
+    ]
+  ];
 
-  const slideIn = {
-    initial: { opacity: 0, x: -50 },
-    animate: { opacity: 1, x: 0 },
-    transition: { duration: 0.8, ease: "easeOut" }
-  };
+  const galleryItems = [
+    [
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+1",
+        title: "Installation Process",
+        description: "Professional biodigester installation"
+      },
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+2",
+        title: "Waste Processing",
+        description: "Efficient organic waste management"
+      },
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+3",
+        title: "Energy Production",
+        description: "Clean energy generation"
+      }
+    ],
+    [
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+4",
+        title: "Maintenance",
+        description: "Regular system maintenance"
+      },
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+5",
+        title: "Monitoring",
+        description: "Advanced monitoring systems"
+      },
+      {
+        image: "/placeholder.svg?height=400&width=600&text=Gallery+6",
+        title: "Results",
+        description: "Measurable impact"
+      }
+    ]
+  ];
+
+  useEffect(() => {
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonialSet((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    const galleryInterval = setInterval(() => {
+      setCurrentGallerySet((prev) => (prev + 1) % galleryItems.length);
+    }, 6000);
+
+    return () => {
+      clearInterval(testimonialInterval);
+      clearInterval(galleryInterval);
+    };
+  }, []);
 
   return (
-    <div style={styles.hero}>
-      <img
-        src="https://i.pinimg.com/736x/bf/1c/5f/bf1c5fceeccdf2c9dd9777304840e1c1.jpg"
-        alt="Biodigester background"
-        style={styles.backgroundImage}
-      />
-      <div style={styles.content}>
-        <div style={styles.textContent}>
-          <motion.div 
-            style={styles.welcome}
-            {...fadeIn}
-            transition={{ delay: 0.2 }}
-          >
-            <div style={styles.welcomeLine}></div>
-            Revolutionizing Waste Management
-          </motion.div>
-          
-          <motion.h1 
-            style={styles.heading}
-            {...slideIn}
-            transition={{ delay: 0.4 }}
-          >
-            Transform Waste into <span style={styles.highlight}>Sustainable Energy</span>
-          </motion.h1>
-          
-          <motion.p 
-            style={styles.subheading}
-            {...fadeIn}
-            transition={{ delay: 0.6 }}
-          >
-            Experience the future of eco-friendly solutions with our innovative biodigesters. 
-            Reduce your carbon footprint and generate clean energy from organic waste.
-          </motion.p>
-          
-          <motion.div 
-            style={styles.buttonContainer}
-            {...fadeIn}
-            transition={{ delay: 0.8 }}
-          >
-            <button 
-              style={{...styles.button, ...styles.primaryButton}}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.backgroundColor = '#FF8C00';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.backgroundColor = '#FFA500';
-              }}
-            >
-              Explore Solutions
-              <span style={styles.arrow}>→</span>
-            </button>
-            <button 
-              style={{...styles.button, ...styles.secondaryButton}}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.backgroundColor = '#004d40';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.backgroundColor = '#003329';
-              }}
-            >
-              Get a Quote
-              <span style={styles.arrow}>→</span>
-            </button>
-          </motion.div>
-        </div>
-        <motion.div 
-          style={styles.imageContainer}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <img
-            src="https://i.pinimg.com/736x/12/3c/7a/123c7a4a0d7ed2fad2546cc273af7b0c.jpg"
-            alt="Biodigester in action"
-            style={styles.rightImage}
-          />
-        </motion.div>
-      </div>
-    </div>
+    <PageContainer>
+      <MainContent>
+        <UpperSection>
+          <Logo>Transform Waste into Sustainable Energy</Logo>
+          <HeroContent>
+            <TextContent>
+              <CompanyTitle>
+                Transform Waste into
+                <ProfileText> Sustainable Energy</ProfileText>
+              </CompanyTitle>
+              <HeroText>
+                <Welcome>
+                  Revolutionizing Waste Management
+                </Welcome>
+                <Subheading>
+                  Experience the future of eco-friendly solutions with our innovative biodigesters. 
+                  Reduce your carbon footprint and generate clean energy from organic waste.
+                </Subheading>
+                <ButtonContainer>
+                  <PrimaryButton>
+                    Explore Solutions
+                    <span>→</span>
+                  </PrimaryButton>
+                  <SecondaryButton>
+                    Get a Quote
+                    <span>→</span>
+                  </SecondaryButton>
+                </ButtonContainer>
+              </HeroText>
+            </TextContent>
+            <HeroImageContainer>
+              <HeroImage src="https://ae01.alicdn.com/kf/S8c9c663ae62d418c84ef6f6c85e43c16W.jpg_640x640q90.jpg?width=371&height=320&hash=691" alt="Biodigester diagram" />
+            </HeroImageContainer>
+          </HeroContent>
+          <DiagonalDivider />
+        </UpperSection>
+
+        <LowerSection>
+          <Section>
+            <SectionTitle>Voices of Success</SectionTitle>
+            <CarouselContainer>
+              <AnimatePresence mode="wait">
+                <CardGrid
+                  key={currentTestimonialSet}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {testimonials[currentTestimonialSet].map((testimonial, index) => (
+                    <TestimonialCard key={index}>
+                      <TestimonialHeader>
+                        <TestimonialImage src={testimonial.image} alt={testimonial.name} />
+                        <TestimonialInfo>
+                          <TestimonialName>{testimonial.name}</TestimonialName>
+                          <TestimonialRole>{testimonial.role}</TestimonialRole>
+                        </TestimonialInfo>
+                      </TestimonialHeader>
+                      <TestimonialText>{testimonial.text}</TestimonialText>
+                      <QuoteDecoration>"</QuoteDecoration>
+                    </TestimonialCard>
+                  ))}
+                </CardGrid>
+              </AnimatePresence>
+            </CarouselContainer>
+          </Section>
+
+          <Section>
+            <SectionTitle>Our Gallery</SectionTitle>
+            <CarouselContainer>
+              <AnimatePresence mode="wait">
+                <CardGrid
+                  key={currentGallerySet}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {galleryItems[currentGallerySet].map((item, index) => (
+                    <GalleryCard key={index}>
+                      <GalleryImage src={item.image} alt={item.title} />
+                      <GalleryContent>
+                        <GalleryTitle>{item.title}</GalleryTitle>
+                        <GalleryDescription>{item.description}</GalleryDescription>
+                      </GalleryContent>
+                    </GalleryCard>
+                  ))}
+                </CardGrid>
+              </AnimatePresence>
+            </CarouselContainer>
+          </Section>
+        </LowerSection>
+      </MainContent>
+
+      <Footer>
+        <FooterContent>
+          <ContactInfo>
+            <p>Phone: +254 794 242 466</p>
+            <p>Email: info@biodigesters.com</p>
+          </ContactInfo>
+          <SocialMedia>
+            <SocialIcon href="#"><FaFacebook /></SocialIcon>
+            <SocialIcon href="#"><FaTwitter /></SocialIcon>
+            <SocialIcon href="#"><FaInstagram /></SocialIcon>
+            <SocialIcon href="#"><FaLinkedin /></SocialIcon>
+          </SocialMedia>
+        </FooterContent>
+        <Copyright>
+          Created with <FaHeart style={{ color: '#A31621', marginBottom: '-2px' }} /> by Shelvin Akamuran
+        </Copyright>
+      </Footer>
+    </PageContainer>
   );
 };
+
+// Styled Components
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const MainContent = styled.main`
+  flex: 1 0 auto;
+`;
+
+const UpperSection = styled.div`
+  position: relative;
+  min-height: 100vh;
+  background: white;
+  overflow: hidden;
+`;
+
+const Logo = styled.div`
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #A31621;
+  z-index: 10;
+`;
+
+const HeroContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    padding: 6rem 2rem 2rem;
+  }
+`;
+
+const TextContent = styled.div`
+  flex: 1;
+  max-width: 600px;
+  z-index: 2;
+`;
+
+const CompanyTitle = styled.h1`
+  font-size: 5rem;
+  font-weight: 700;
+  color: #1E1E1E;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+`;
+
+const ProfileText = styled.span`
+  display: block;
+  color: #A31621;
+`;
+
+const HeroText = styled.div`
+  margin-top: 2rem;
+`;
+
+const Welcome = styled.div`
+  font-size: 1.3rem;
+  color: #1E1E1E;
+  margin-bottom: 1rem;
+  font-weight: bold;
+`;
+
+const Subheading = styled.p`
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const Button = styled.button`
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const PrimaryButton = styled(Button)`
+  background-color: #A31621;
+  color: white;
+
+  &:hover {
+    background-color: #8B1219;
+  }
+`;
+
+const SecondaryButton = styled(Button)`
+  background-color: white;
+  color: #A31621;
+  border: 2px solid #A31621;
+
+  &:hover {
+    background-color: #A31621;
+    color: white;
+  }
+`;
+
+const HeroImageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  margin-left: -10%;
+  width: 800%;
+
+  @media (max-width: 8060px) {
+    margin-top: 2rem;
+    width: 500%;
+    margin-left: 0;
+  }
+`;
+
+const HeroImage = styled.img`
+  max-width: 800%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2);
+  mix-blend-mode: multiply;
+`;
+
+const DiagonalDivider = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #A31621;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  z-index: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: 50%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+`;
+
+const LowerSection = styled.div`
+  background-color: #F5F5F5;
+  padding: 4rem 0;
+`;
+
+const Section = styled.section`
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 2.5rem;
+  color: #A31621;
+  text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const CarouselContainer = styled.div`
+  width: 100%;
+  overflow: hidden;
+`;
+
+const CardGrid = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1rem 0;
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+`;
+
+const Card = styled.div`
+  background: white;
+  border-radius: 1rem;
+  padding: 4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+`;
+
+const TestimonialCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  gap: 1.0rem;
+`;
+
+const TestimonialHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const TestimonialImage = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const TestimonialInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const TestimonialName = styled.h3`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+`;
+
+const TestimonialRole = styled.p`
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+`;
+
+const TestimonialText = styled.p`
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+`;
+
+const QuoteDecoration = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 4rem;
+  color: #A31621;
+  opacity: 0.1;
+  line-height: 1;
+`;
+
+const GalleryCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const GalleryImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+`;
+
+const GalleryContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const GalleryTitle = styled.h3`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+`;
+
+const GalleryDescription = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+`;
+
+const Footer = styled.footer`
+  background-color: #1E1E1E;
+  color: white;
+  padding: 2rem;
+  flex-shrink: 0;
+`;
+
+const FooterContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`;
+
+const ContactInfo = styled.div`
+  font-size: 0.9rem;
+`;
+
+const SocialMedia = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const SocialIcon = styled.a`
+  color: white;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #A31621;
+  }
+`;
+
+const Copyright = styled.div`
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #999;
+`;
 
 export default HeroSection;
 

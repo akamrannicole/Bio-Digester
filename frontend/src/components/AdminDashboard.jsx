@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaShoppingCart, FaBox, FaCommentDots, FaCreditCard, FaChartBar, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
+import { FaShoppingCart, FaBox, FaCommentDots, FaCreditCard, FaChartBar, FaBars, FaTimes, FaSignOutAlt, FaHome } from 'react-icons/fa';
 
-// Styled Components
 const DashboardContainer = styled.div`
   display: flex;
   min-height: 100vh;
@@ -199,6 +198,10 @@ const AdminDashboard = () => {
               {item.name}
             </NavItem>
           ))}
+          <NavItem onClick={() => navigate('/')}>
+            <FaHome />
+            Back to Home
+          </NavItem>
           <NavItem onClick={() => console.log('Logout clicked')}>
             <FaSignOutAlt />
             Logout
@@ -213,11 +216,11 @@ const AdminDashboard = () => {
 
         <Routes>
           <Route path="/" element={<DashboardHome />} />
-          <Route path="/orders" element={<OrdersManagement />} />
-          <Route path="/inventory" element={<InventoryManagement />} />
-          <Route path="/queries" element={<CustomerQueriesManagement />} />
-          <Route path="/payments" element={<PaymentsManagement />} />
-          <Route path="/analytics" element={<WebsiteAnalytics />} />
+          <Route path="/admin/orders" element={<OrdersManagement />} />
+          <Route path="/admin/inventory" element={<InventoryManagement />} />
+          <Route path="/admin/queries" element={<CustomerQueriesManagement />} />
+          <Route path="/admin/payments" element={<PaymentsManagement />} />
+          <Route path="/admin/analytics" element={<WebsiteAnalytics />} />
         </Routes>
       </MainContent>
     </DashboardContainer>

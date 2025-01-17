@@ -46,7 +46,7 @@ const Navbar = () => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '1rem 2rem',
+      padding: '0.75rem 1.5rem',
       background: 'linear-gradient(to right, rgba(163, 22, 33, 0.8), rgba(163, 22, 33, 0.6))',
       backdropFilter: 'blur(8px)',
       zIndex: 1000,
@@ -56,7 +56,7 @@ const Navbar = () => {
     logo: {
       display: 'flex',
       alignItems: 'center',
-      fontSize: '1.8rem',
+      fontSize: '1.4rem',
       fontWeight: 'bold',
       color: '#FFFFFF',
       cursor: 'pointer',
@@ -64,20 +64,20 @@ const Navbar = () => {
       transition: 'transform 0.3s ease',
     },
     logoIcon: {
-      width: '40px',
-      height: '40px',
-      marginRight: '10px',
+      width: '32px',
+      height: '32px',
+      marginRight: '8px',
     },
     links: {
       display: 'flex',
-      gap: '2rem',
+      gap: '1.5rem',
       alignItems: 'center',
     },
     link: {
       color: 'white',
       textDecoration: 'none',
-      fontSize: '1rem',
-      padding: '0.5rem 1rem',
+      fontSize: '0.9rem',
+      padding: '0.4rem 0.8rem',
       borderRadius: '4px',
       transition: 'all 0.3s ease',
       position: 'relative',
@@ -89,29 +89,30 @@ const Navbar = () => {
       position: 'absolute',
       top: '100%',
       left: '0',
-      background: 'linear-gradient(to bottom, rgba(163, 22, 33, 0.9), rgba(163, 22, 33, 0.7))',
+      background: 'white',
       borderRadius: '8px',
-      padding: '0.5rem',
-      marginTop: '0.5rem',
-      minWidth: '250px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+      padding: '0.4rem',
+      marginTop: '0.4rem',
+      minWidth: '220px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     },
     dropdownItem: {
-      color: 'white',
-      padding: '0.75rem 1rem',
+      color: '#333',
+      padding: '0.6rem 0.8rem',
       textDecoration: 'none',
       display: 'block',
       borderRadius: '4px',
       transition: 'all 0.2s ease',
+      fontSize: '0.85rem',
     },
     button: {
       backgroundColor: 'rgba(255, 255, 255, 0.1)',
       color: '#FFFFFF',
       border: '1px solid rgba(255, 255, 255, 0.3)',
-      padding: '0.75rem 1.5rem',
-      borderRadius: '5px',
+      padding: '0.6rem 1.2rem',
+      borderRadius: '4px',
       cursor: 'pointer',
-      fontSize: '1rem',
+      fontSize: '0.9rem',
       fontWeight: '500',
       transition: 'all 0.3s ease',
     },
@@ -130,9 +131,10 @@ const Navbar = () => {
         onClick={() => navigate('/')}
       >
         <svg style={styles.logoIcon} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" stroke="white" strokeWidth="5"/>
-          <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white"/>
-          <path d="M40 50 L50 40 L60 50 L50 60 Z" fill="#A31621"/>
+          <rect width="100" height="100" rx="20" fill="#A31621"/>
+          <path d="M20 20 L50 50 L20 80" stroke="white" strokeWidth="8" strokeLinecap="round"/>
+          <path d="M50 20 L80 50 L50 80" stroke="white" strokeWidth="8" strokeLinecap="round"/>
+          <circle cx="50" cy="50" r="10" fill="white"/>
         </svg>
         Mg BioDigesters
       </Link>
@@ -181,12 +183,12 @@ const Navbar = () => {
                   to={`/services/${service.toLowerCase().replace(/\s+/g, '-')}`}
                   style={styles.dropdownItem}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.color = '#FFFFFF';
+                    e.target.style.backgroundColor = 'rgba(163, 22, 33, 0.1)';
+                    e.target.style.color = '#A31621';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = 'white';
+                    e.target.style.color = '#333';
                   }}
                 >
                   {service}
@@ -196,19 +198,19 @@ const Navbar = () => {
           )}
         </div>
         {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <img
               src={user.profilePicture || "/placeholder.svg"}
               alt={user.name}
               style={{
-                width: '40px',
-                height: '40px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 objectFit: 'cover',
                 border: '2px solid rgba(255, 255, 255, 0.3)',
               }}
             />
-            <span style={{ color: 'white' }}>Welcome, {user.name}</span>
+            <span style={{ color: 'white', fontSize: '0.9rem' }}>Welcome, {user.name}</span>
             <button
               onClick={logout}
               style={{
@@ -216,6 +218,8 @@ const Navbar = () => {
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 color: '#FFFFFF',
+                padding: '0.4rem 0.8rem',
+                fontSize: '0.85rem',
               }}
             >
               Logout

@@ -53,36 +53,24 @@ const HeroSection = () => {
   const galleryItems = [
     [
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+1",
-        title: "Installation Process",
-        description: "Professional biodigester installation"
+        image: "/images/WhatsApp Image 2025-01-05 at 14.23.32_e50ebe6b.jpg",
       },
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+2",
-        title: "Waste Processing",
-        description: "Efficient organic waste management"
+        image: "/images/WhatsApp Image 2025-01-05 at 14.23.31_a1bb95b6.jpg",
       },
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+3",
-        title: "Energy Production",
-        description: "Clean energy generation"
+        image: "/images/WhatsApp Image 2025-01-04 at 18.08.24_706513f8.jpg",
       }
     ],
     [
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+4",
-        title: "Maintenance",
-        description: "Regular system maintenance"
+        image: "/images/WhatsApp Image 2024-12-27 at 09.14.22_7cc2de59.jpg",
       },
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+5",
-        title: "Monitoring",
-        description: "Advanced monitoring systems"
+        image: "/images/WhatsApp Image 2025-01-04 at 18.08.26_bf8b3070.jpg",
       },
       {
-        image: "/placeholder.svg?height=400&width=600&text=Gallery+6",
-        title: "Results",
-        description: "Measurable impact"
+        image: "/images/WhatsApp Image 2024-12-19 at 15.00.32_a3a15bca.jpg",
       }
     ]
   ];
@@ -172,27 +160,11 @@ const HeroSection = () => {
 
           <Section>
             <SectionTitle>Our Gallery</SectionTitle>
-            <CarouselContainer>
-              <AnimatePresence mode="wait">
-                <CardGrid
-                  key={currentGallerySet}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {galleryItems[currentGallerySet].map((item, index) => (
-                    <GalleryCard key={index}>
-                      <GalleryImage src={item.image} alt={item.title} />
-                      <GalleryContent>
-                        <GalleryTitle>{item.title}</GalleryTitle>
-                        <GalleryDescription>{item.description}</GalleryDescription>
-                      </GalleryContent>
-                    </GalleryCard>
-                  ))}
-                </CardGrid>
-              </AnimatePresence>
-            </CarouselContainer>
+            <GalleryGrid>
+              {galleryItems[currentGallerySet].map((item, index) => (
+                <GalleryImage key={index} src={item.image} alt={`Gallery image ${index + 1}`} />
+              ))}
+            </GalleryGrid>
           </Section>
         </LowerSection>
       </MainContent>
@@ -218,7 +190,6 @@ const HeroSection = () => {
   );
 };
 
-// Styled Components
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -231,16 +202,16 @@ const MainContent = styled.main`
 
 const UpperSection = styled.div`
   position: relative;
-  min-height: 100vh;
+  min-height: 90vh;
   background: white;
   overflow: hidden;
 `;
 
 const Logo = styled.div`
   position: absolute;
-  top: 2rem;
-  left: 2rem;
-  font-size: 1.2rem;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #A31621;
   z-index: 10;
@@ -250,30 +221,30 @@ const HeroContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 8rem 2rem 4rem;
+  padding: 6rem 1.5rem 3rem;
   position: relative;
   z-index: 2;
 
   @media (max-width: 1024px) {
     flex-direction: column;
-    padding: 6rem 2rem 2rem;
+    padding: 4rem 1.5rem 1.5rem;
   }
 `;
 
 const TextContent = styled.div`
   flex: 1;
-  max-width: 600px;
+  max-width: 500px;
   z-index: 2;
 `;
 
 const CompanyTitle = styled.h1`
-  font-size: 5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   color: #1E1E1E;
   line-height: 1.1;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 `;
 
 const ProfileText = styled.span`
@@ -282,26 +253,26 @@ const ProfileText = styled.span`
 `;
 
 const HeroText = styled.div`
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 `;
 
 const Welcome = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #1E1E1E;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   font-weight: bold;
 `;
 
 const Subheading = styled.p`
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #666;
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -309,8 +280,8 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
   font-weight: 500;
   border-radius: 4px;
   display: flex;
@@ -352,21 +323,21 @@ const HeroImageContainer = styled.div`
   align-items: center;
   position: relative;
   z-index: 1;
-  margin-left: -10%;
-  width: 800%;
+  margin-left: -5%;
+  width: 600%;
 
-  @media (max-width: 8060px) {
-    margin-top: 2rem;
-    width: 500%;
+  @media (max-width: 1024px) {
+    margin-top: 1.5rem;
+    width: 400%;
     margin-left: 0;
   }
 `;
 
 const HeroImage = styled.img`
-  max-width: 800%;
-  height: 100%;
+  max-width: 600%;
+  height: auto;
   object-fit: cover;
-  transform: scale(1.2);
+  transform: scale(1.1);
   mix-blend-mode: multiply;
 `;
 
@@ -389,20 +360,20 @@ const DiagonalDivider = styled.div`
 
 const LowerSection = styled.div`
   background-color: #F5F5F5;
-  padding: 4rem 0;
+  padding: 3rem 0;
 `;
 
 const Section = styled.section`
-  padding: 4rem 2rem;
+  padding: 3rem 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #A31621;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 
 const CarouselContainer = styled.div`
@@ -412,22 +383,20 @@ const CarouselContainer = styled.div`
 
 const CardGrid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   padding: 1rem 0;
 
-  @media (max-width: 968px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    max-width: 500px;
-    margin: 0 auto;
   }
 `;
 
 const Card = styled.div`
   background: white;
-  border-radius: 1rem;
-  padding: 4rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 `;
@@ -435,7 +404,8 @@ const Card = styled.div`
 const TestimonialCard = styled(Card)`
   display: flex;
   flex-direction: column;
-  gap: 1.0rem;
+  gap: 1rem;
+  min-height: 250px;
 `;
 
 const TestimonialHeader = styled.div`
@@ -445,8 +415,8 @@ const TestimonialHeader = styled.div`
 `;
 
 const TestimonialImage = styled.img`
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   object-fit: cover;
 `;
@@ -486,42 +456,29 @@ const QuoteDecoration = styled.div`
   line-height: 1;
 `;
 
-const GalleryCard = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+const GalleryGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
 `;
 
 const GalleryImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 300px;
   object-fit: cover;
   border-radius: 0.5rem;
-`;
+  transition: transform 0.3s ease;
 
-const GalleryContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const GalleryTitle = styled.h3`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-`;
-
-const GalleryDescription = styled.p`
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Footer = styled.footer`
   background-color: #1E1E1E;
   color: white;
-  padding: 2rem;
+  padding: 1.5rem;
   flex-shrink: 0;
 `;
 
@@ -534,7 +491,7 @@ const FooterContent = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 `;
 
@@ -549,7 +506,7 @@ const SocialMedia = styled.div`
 
 const SocialIcon = styled.a`
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   transition: color 0.3s ease;
 
   &:hover {

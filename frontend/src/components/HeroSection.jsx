@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHeart } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHeart, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 const HeroSection = () => {
   const [currentTestimonialSet, setCurrentTestimonialSet] = useState(0);
@@ -176,18 +176,32 @@ const HeroSection = () => {
       <Footer>
         <FooterContent>
           <ContactInfo>
-            <p>Phone: +254 794 242 466</p>
-            <p>Email: info@biodigesters.com</p>
+            <ContactTitle>Contact Us</ContactTitle>
+            <ContactItem>
+              <FaPhone color="#4267B2" />
+              <span>+254 794 242 466</span>
+            </ContactItem>
+            <ContactItem>
+              <FaEnvelope color="#1DA1F2" />
+              <span>info@biodigesters.com</span>
+            </ContactItem>
+            <ContactItem>
+              <FaMapMarkerAlt color="#E1306C" />
+              <span>Along Ruai Bypass</span>
+            </ContactItem>
           </ContactInfo>
-          <SocialMedia>
-            <SocialIcon href="#"><FaFacebook /></SocialIcon>
-            <SocialIcon href="#"><FaTwitter /></SocialIcon>
-            <SocialIcon href="#"><FaInstagram /></SocialIcon>
-            <SocialIcon href="#"><FaLinkedin /></SocialIcon>
-          </SocialMedia>
+          <SocialMediaSection>
+            <ContactTitle>Connect with Us</ContactTitle>
+            <SocialMedia>
+              <SocialIcon href="#" style={{ color: '#4267B2' }}><FaFacebook /></SocialIcon>
+              <SocialIcon href="#" style={{ color: '#1DA1F2' }}><FaTwitter /></SocialIcon>
+              <SocialIcon href="#" style={{ color: '#E1306C' }}><FaInstagram /></SocialIcon>
+              <SocialIcon href="#" style={{ color: '#0e76a8' }}><FaLinkedin /></SocialIcon>
+            </SocialMedia>
+          </SocialMediaSection>
         </FooterContent>
         <Copyright>
-          Created with <FaHeart style={{ color: '#A31621', marginBottom: '-2px' }} /> by Shelvin Akamuran
+          Created with <FaHeart style={{ color: '#A31621', marginBottom: '-2px' }} /> by Shelvin Akamuran (+254 794 242 466)
         </Copyright>
       </Footer>
       {isLoading && (
@@ -395,7 +409,7 @@ const TestimonialCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  min-height: 250px;
+  min-height: 150px;
 `;
 
 const TestimonialHeader = styled.div`
@@ -475,18 +489,41 @@ const Footer = styled.footer`
 const FooterContent = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   max-width: 1200px;
   margin: 0 auto;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1.5rem;
   }
 `;
 
 const ContactInfo = styled.div`
   font-size: 0.9rem;
+`;
+
+const ContactTitle = styled.h3`
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #A31621;
+`;
+
+const ContactItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const SocialMediaSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+  }
 `;
 
 const SocialMedia = styled.div`
@@ -495,7 +532,6 @@ const SocialMedia = styled.div`
 `;
 
 const SocialIcon = styled.a`
-  color: white;
   font-size: 1.4rem;
   transition: color 0.3s ease;
 
@@ -506,7 +542,7 @@ const SocialIcon = styled.a`
 
 const Copyright = styled.div`
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   font-size: 0.8rem;
   color: #999;
 `;

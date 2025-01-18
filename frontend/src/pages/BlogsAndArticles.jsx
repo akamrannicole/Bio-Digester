@@ -1,79 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const BlogsAndArticles = () => {
-  const styles = {
-    container: {
-      maxWidth: '1700px',
-      margin: '0 auto',
-      padding: '6rem 2rem',
-      backgroundColor: '#f0f8ff',
-      color: '#333',
-      fontFamily: "'Poppins', sans-serif",
-    },
-    header: {
-      textAlign: 'center',
-      marginBottom: '3rem',
-    },
-    title: {
-      fontSize: '3rem',
-      color: '#004d40',
-      marginBottom: '1rem',
-    },
-    subtitle: {
-      fontSize: '1.5rem',
-      color: '#666',
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-      gap: '2rem',
-    },
-    card: {
-      backgroundColor: '#fff',
-      borderRadius: '10px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
-      textDecoration: 'none',
-      color: 'inherit',
-    },
-    cardImage: {
-      width: '100%',
-      height: '200px',
-      objectFit: 'cover',
-    },
-    cardContent: {
-      padding: '1.5rem',
-    },
-    cardTitle: {
-      fontSize: '1.5rem',
-      color: '#004d40',
-      marginBottom: '0.5rem',
-    },
-    cardExcerpt: {
-      fontSize: '1rem',
-      color: '#666',
-      marginBottom: '1rem',
-    },
-    cardMeta: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      fontSize: '0.9rem',
-      color: '#888',
-    },
-    tag: {
-      backgroundColor: '#e0f2f1',
-      color: '#004d40',
-      padding: '0.2rem 0.5rem',
-      borderRadius: '4px',
-      fontSize: '0.8rem',
-    },
-  };
-
   const blogPosts = [
     {
       id: 1,
@@ -132,13 +62,13 @@ const BlogsAndArticles = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <motion.header style={styles.header} {...fadeInUp}>
-        <h1 style={styles.title}>Blogs and Articles</h1>
-        <p style={styles.subtitle}>Stay Informed with the Latest in Biodigester Technology and Sustainable Waste Management</p>
-      </motion.header>
+    <Container>
+      <Header as={motion.header} {...fadeInUp}>
+        <Title>Blogs and Articles</Title>
+        <Subtitle>Stay Informed with the Latest in Biodigester Technology and Sustainable Waste Management</Subtitle>
+      </Header>
 
-      <motion.div style={styles.grid}>
+      <Grid>
         {blogPosts.map((post, index) => (
           <motion.div
             key={post.id}
@@ -149,23 +79,119 @@ const BlogsAndArticles = () => {
             {...fadeInUp}
             transition={{ delay: index * 0.1 }}
           >
-            <Link to={`/blog/${post.id}`} style={styles.card}>
-              <img src={post.image} alt={post.title} style={styles.cardImage} />
-              <div style={styles.cardContent}>
-                <h2 style={styles.cardTitle}>{post.title}</h2>
-                <p style={styles.cardExcerpt}>{post.excerpt}</p>
-                <div style={styles.cardMeta}>
-                  <span>{post.date}</span>
-                  <span style={styles.tag}>{post.tag}</span>
-                </div>
-              </div>
-            </Link>
+            <Card to={`/blog/${post.id}`}>
+              <CardImage src={post.image} alt={post.title} />
+              <CardContent>
+                <CardTitle>{post.title}</CardTitle>
+                <CardExcerpt>{post.excerpt}</CardExcerpt>
+                <CardMeta>
+                  <CardDate>{post.date}</CardDate>
+                  <Tag>{post.tag}</Tag>
+                </CardMeta>
+              </CardContent>
+            </Card>
           </motion.div>
         ))}
-      </motion.div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+`;
+
+const Header = styled.header`
+  text-align: center;
+  margin-bottom: 3rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  color: #A31621;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+`;
+
+const Card = styled(Link)`
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+`;
+
+const CardContent = styled.div`
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
+const CardTitle = styled.h2`
+  font-size: 1.3rem;
+  color: black;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+`;
+
+const CardExcerpt = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+`;
+
+const CardMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #888;
+`;
+
+const CardDate = styled.span`
+  font-style: italic;
+`;
+
+const Tag = styled.span`
+  background-color: #f0e6e7;
+  color: #A31621;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+`;
 
 export default BlogsAndArticles;
 

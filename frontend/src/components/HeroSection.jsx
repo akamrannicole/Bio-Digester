@@ -6,6 +6,7 @@ import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHeart } from 'react-i
 const HeroSection = () => {
   const [currentTestimonialSet, setCurrentTestimonialSet] = useState(0);
   const [currentGallerySet, setCurrentGallerySet] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const testimonials = [
     [
@@ -90,6 +91,13 @@ const HeroSection = () => {
     };
   }, []);
 
+  const handleExploreProducts = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      window.location.href = '/shop';
+    }, 1000);
+  };
+
   return (
     <PageContainer>
       <MainContent>
@@ -110,14 +118,10 @@ const HeroSection = () => {
                   Reduce your carbon footprint and generate clean energy from organic waste.
                 </Subheading>
                 <ButtonContainer>
-                  <PrimaryButton>
-                    Explore Solutions
+                  <PrimaryButton onClick={handleExploreProducts}>
+                    Explore our products
                     <span>→</span>
                   </PrimaryButton>
-                  <SecondaryButton>
-                    Get a Quote
-                    <span>→</span>
-                  </SecondaryButton>
                 </ButtonContainer>
               </HeroText>
             </TextContent>
@@ -186,6 +190,11 @@ const HeroSection = () => {
           Created with <FaHeart style={{ color: '#A31621', marginBottom: '-2px' }} /> by Shelvin Akamuran
         </Copyright>
       </Footer>
+      {isLoading && (
+        <LoadingOverlay>
+          <LoadingSpinner />
+        </LoadingOverlay>
+      )}
     </PageContainer>
   );
 };
@@ -194,6 +203,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 `;
 
 const MainContent = styled.main`
@@ -279,7 +289,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
+const PrimaryButton = styled.button`
   padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
   font-weight: 500;
@@ -290,29 +300,12 @@ const Button = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const PrimaryButton = styled(Button)`
   background-color: #A31621;
   color: white;
 
   &:hover {
     background-color: #8B1219;
-  }
-`;
-
-const SecondaryButton = styled(Button)`
-  background-color: white;
-  color: #A31621;
-  border: 2px solid #A31621;
-
-  &:hover {
-    background-color: #A31621;
-    color: white;
+    transform: scale(1.05);
   }
 `;
 
@@ -392,16 +385,13 @@ const CardGrid = styled(motion.div)`
   }
 `;
 
-const Card = styled.div`
+const TestimonialCard = styled.div`
   background: white;
   border-radius: 0.75rem;
   padding: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-`;
-
-const TestimonialCard = styled(Card)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -519,6 +509,33 @@ const Copyright = styled.div`
   margin-top: 1rem;
   font-size: 0.8rem;
   color: #999;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+`;
+
+const LoadingSpinner = styled.div`
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #A31621;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `;
 
 export default HeroSection;

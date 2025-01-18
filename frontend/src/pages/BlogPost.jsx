@@ -1,90 +1,18 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import styled from 'styled-components';
 
 const BlogPost = () => {
   const { id } = useParams();
   
-  const styles = {
-    container: {
-      maxWidth: '1700px',
-      margin: '0 auto',
-      padding: '6rem 2rem',
-      backgroundColor: 'white',
-      color: '#333',
-      fontFamily: "'Poppins', sans-serif",
-    },
-    header: {
-      marginBottom: '2rem',
-    },
-    title: {
-      fontSize: '2.5rem',
-      color: '#004d40',
-      marginBottom: '1rem',
-    },
-    meta: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      fontSize: '0.9rem',
-      color: '#888',
-      marginBottom: '2rem',
-    },
-    tag: {
-      backgroundColor: '#e0f2f1',
-      color: '#004d40',
-      padding: '0.2rem 0.5rem',
-      borderRadius: '4px',
-      fontSize: '0.8rem',
-    },
-    contentWrapper: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2rem',
-    },
-    imageTextWrapper: {
-      display: 'flex',
-      gap: '2rem',
-      marginBottom: '2rem',
-    },
-    image: {
-      width: '40%',
-      height: 'auto',
-      borderRadius: '10px',
-      objectFit: 'cover',
-    },
-    content: {
-      fontSize: '1.1rem',
-      lineHeight: '1.8',
-      flex: 1,
-    },
-    section: {
-      marginBottom: '2rem',
-    },
-    subheading: {
-      fontSize: '1.8rem',
-      color: '#004d40',
-      marginBottom: '1rem',
-    },
-    backLink: {
-      display: 'inline-block',
-      marginTop: '2rem',
-      padding: '0.5rem 1rem',
-      backgroundColor: '#004d40',
-      color: 'white',
-      textDecoration: 'none',
-      borderRadius: '4px',
-      transition: 'background-color 0.3s ease',
-    },
-  };
-
   const blogPosts = [
     {
       id: 1,
       title: "The Future of Biodigesters in Urban Waste Management",
       date: "May 15, 2025",
       tag: "Innovation",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJu0Jqg_NPwQ6-PIWyEXCSTKhFVdbLctT1MKUSW1perjs_HkbulVrQoJrV1Fi8HRUzyrY&usqp=CAU",
+      image: "https://s.alicdn.com/@sc04/kf/H59f885ac25cc42918cb7016c9e9b6ddeH.jpg",
       content: [
         {
           subheading: "Introduction to Urban Waste Management Challenges",
@@ -302,62 +230,165 @@ const BlogPost = () => {
   const post = blogPosts.find(post => post.id === parseInt(id));
 
   if (!post) {
-    return <div style={styles.container}>Post not found</div>;
+    return <Container>Post not found</Container>;
   }
 
   return (
     <motion.div 
-      style={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <header style={styles.header}>
-        <h1 style={styles.title}>{post.title}</h1>
-        <div style={styles.meta}>
-          <span>{post.date}</span>
-          <span style={styles.tag}>{post.tag}</span>
-        </div>
-      </header>
-      <div style={styles.contentWrapper}>
-        <div style={styles.imageTextWrapper}>
-          <img src={post.image} alt={post.title} style={styles.image} />
-          <div style={styles.content}>
-            {post.content.slice(0, 2).map((section, index) => (
+      <Container>
+        <Header>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Title>{post.title}</Title>
+          </motion.h1>
+          <Meta>
+            <span>{post.date}</span>
+            <Tag>{post.tag}</Tag>
+          </Meta>
+        </Header>
+        <ContentWrapper>
+          <ImageTextWrapper>
+            <Image src={post.image || "/placeholder.svg"} alt={post.title} />
+            <Content>
+              {post.content.slice(0, 2).map((section, index) => (
+                <motion.section 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Subheading>{section.subheading}</Subheading>
+                  <Text>{section.text}</Text>
+                </motion.section>
+              ))}
+            </Content>
+          </ImageTextWrapper>
+          <Content>
+            {post.content.slice(2).map((section, index) => (
               <motion.section 
-                key={index} 
-                style={styles.section}
+                key={index + 2}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: (index + 2) * 0.1 }}
               >
-                <h2 style={styles.subheading}>{section.subheading}</h2>
-                <p>{section.text}</p>
+                <Subheading>{section.subheading}</Subheading>
+                <Text>{section.text}</Text>
               </motion.section>
             ))}
-          </div>
-        </div>
-        <div style={styles.content}>
-          {post.content.slice(2).map((section, index) => (
-            <motion.section 
-              key={index + 2} 
-              style={styles.section}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: (index + 2) * 0.1 }}
-            >
-              <h2 style={styles.subheading}>{section.subheading}</h2>
-              <p>{section.text}</p>
-            </motion.section>
-          ))}
-        </div>
-      </div>
-      <Link to="/blog-and-articles" style={styles.backLink}>
-        Back to Blog List
-      </Link>
+          </Content>
+        </ContentWrapper>
+        <BackLink to="/blog-and-articles">
+          Back to Blog List
+        </BackLink>
+      </Container>
     </motion.div>
   );
 };
+
+const Container = styled.div`
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  background-color: white;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 200;
+`;
+
+const Header = styled.header`
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  color: #A31621;
+  margin-bottom: 1rem;
+  font-weight: bold;
+`;
+
+const Meta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 2rem;
+`;
+
+const Tag = styled.span`
+  background-color: #f0e6e7;
+  color: #A31621;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const ImageTextWrapper = styled.div`
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const Image = styled.img`
+  width: 40%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const Content = styled.div`
+  font-size: 1.1rem;
+  line-height: 1.8;
+  flex: 1;
+`;
+
+const Subheading = styled.h2`
+  font-size: 1.8rem;
+  color: black;
+  margin-bottom: 1rem;
+  font-weight: 200;
+  text-decoration: underline;
+`;
+
+const Text = styled.p`
+  margin-bottom: 1rem;
+`;
+
+const BackLink = styled(Link)`
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  background-color: #A31621;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #8B1219;
+  }
+`;
 
 export default BlogPost;
 

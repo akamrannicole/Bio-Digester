@@ -10,15 +10,15 @@ const BlogsAndArticles = () => {
       title: "The Future of Biodigesters in Urban Waste Management",
       excerpt: "Explore how biodigesters are revolutionizing waste management in cities...",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJu0Jqg_NPwQ6-PIWyEXCSTKhFVdbLctT1MKUSW1perjs_HkbulVrQoJrV1Fi8HRUzyrY&usqp=CAU",
-      date: "May 15, 2025",
+      date: "May 15, 2024",
       tag: "Innovation",
     },
     {
       id: 2,
       title: "5 Benefits of Using Plastic Septic Tanks",
       excerpt: "Discover why plastic septic tanks are becoming the preferred choice for...",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC90Ousxz51Lth3tIHkRS4LKW6n9j-TwFEigbivPOH8ARWoLVUphtORZLNYU_Ii5jsIHo&usqp=CAU",
-      date: "April 22, 2025",
+      image: "https://s.alicdn.com/@sc04/kf/H59f885ac25cc42918cb7016c9e9b6ddeH.jpg",
+      date: "April 22, 2024",
       tag: "Products",
     },
     {
@@ -26,7 +26,7 @@ const BlogsAndArticles = () => {
       title: "Biodigester Enzymes: The Key to Efficient Waste Breakdown",
       excerpt: "Learn about the crucial role of enzymes in optimizing biodigester performance...",
       image: "https://imaginecare.co.ke/wp-content/uploads/2022/12/bio-digester-bacteria-bio-digester-kenya-1-Bio-Digester-Bacteria.webp",
-      date: "March 10, 2025",
+      date: "March 10, 2024",
       tag: "Technology",
     },
     {
@@ -34,7 +34,7 @@ const BlogsAndArticles = () => {
       title: "Sustainable Agriculture: Biodigesters on Farms",
       excerpt: "How farmers are using biodigesters to manage waste and generate energy...",
       image: "https://i.pinimg.com/474x/88/18/f1/8818f115a7a2223586580865e8a9818e.jpg",
-      date: "February 5, 2025",
+      date: "February 5, 2024",
       tag: "Case Study",
     },
     {
@@ -42,7 +42,7 @@ const BlogsAndArticles = () => {
       title: "The Role of Biodigesters in Achieving Net Zero Emissions",
       excerpt: "Exploring the environmental impact of biodigesters in reducing greenhouse gases...",
       image: "https://i0.wp.com/www.circularonline.co.uk/wp-content/uploads/2020/07/thumbnail_Malaby-Biogas-Bore-Hill-Farm-Biodigester-2020-.png?resize=860%2C516&ssl=1",
-      date: "January 18, 2025",
+      date: "January 18, 2024",
       tag: "Environment",
     },
     {

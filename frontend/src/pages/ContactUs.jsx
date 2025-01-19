@@ -81,7 +81,7 @@ const styles = {
     transition: 'background-color 0.3s ease',
   },
   infoSection: {
-    width: '40%',
+    width: '50%',
     backgroundColor: 'white',
     padding: '25px',
     borderRadius: '8px',
@@ -99,7 +99,7 @@ const styles = {
   },
   map: {
     width: '100%',
-    height: '250px',
+    height: '200px',
     border: 'none',
     borderRadius: '6px',
     marginTop: '15px',
@@ -126,7 +126,7 @@ const styles = {
     bottom: '85px',
     right: '25px',
     width: '350px',
-    height: '500px',
+    height: '350px',
     backgroundColor: 'white',
     borderRadius: '8px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
@@ -175,12 +175,13 @@ const styles = {
     position: 'fixed',
     top: '25px',
     right: '25px',
-    backgroundColor: '#B31B1B',
+    backgroundColor: '#4CAF50',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '6px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
     fontSize: '0.9rem',
+    zIndex: 1000,
   },
   message: {
     padding: '8px 12px',
@@ -206,10 +207,14 @@ const ContactUs = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', { name, email, message });
+    setNotificationMessage('Message sent successfully!');
+    setIsNotificationVisible(true);
+    setTimeout(() => setIsNotificationVisible(false), 3000);
     setName('');
     setEmail('');
     setMessage('');
@@ -222,6 +227,7 @@ const ContactUs = () => {
       setMessage('');
       setTimeout(() => {
         setChatMessages(prev => [...prev, { sender: 'bot', text: 'Thank you for your message. Our team will get back to you shortly.' }]);
+        setNotificationMessage('New message received!');
         setIsNotificationVisible(true);
         setTimeout(() => setIsNotificationVisible(false), 3000);
       }, 500);
@@ -283,7 +289,12 @@ const ContactUs = () => {
           </div>
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.844269982647!2d36.97899157350057!3d-1.2660784356012993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f6ddf76207933%3A0x861be2fb8fca98dd!2sKIFARU%20MABATI%20FACTORY!5e0!3m2!1sen!2ske!4v1737229202815!5m2!1sen!2ske"
-            style={styles.map}></iframe>
+            style={styles.map}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="MG Biodigester Location"
+          ></iframe>
         </section>
       </div>
 
@@ -327,7 +338,7 @@ const ContactUs = () => {
 
       {isNotificationVisible && (
         <div style={styles.notification}>
-          New message received!
+          {notificationMessage}
         </div>
       )}
     </div>

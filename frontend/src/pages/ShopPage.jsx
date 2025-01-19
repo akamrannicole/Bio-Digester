@@ -24,7 +24,7 @@ const products = [
     category: 'additive',
     price: 1500,
     image: 'https://5.imimg.com/data5/SELLER/Default/2022/9/VE/TN/BV/208914/bioclean-septic-tank-cleaner-microbial-culture-for-odour-removal-500x500.jpg',
-    description: 'Advanced Biogas Purifier for enhanced gas quality.',
+    description: 'A powerful powder that breaks down organic waste in septic systems.',
   },
   {
     id: 8,
@@ -32,7 +32,7 @@ const products = [
     category: 'additives',
     price: 2500,
     image: 'https://www.jiomart.com/images/product/original/rvqdk7kzqk/bioclean-septic-organica-bioclean-septic-plus-10x-powerful-septic-tank-cleaner-odour-removing-bacteria-powder-degrades-food-human-waste-safe-for-all-pipes-kitchen-drain-lines-available-in-pack-of-1-250-gm-product-images-orvqdk7kzqk-p606720193-0-202312140552.jpg?im=Resize=(1000,1000)',
-    description: 'Selected blend of Anaerobic Bacteria for systems.',
+    description: 'An advanced septic treatment solution that enhances waste digestion and prevents system clogs for long-term maintenance.',
   },
 ];
 
@@ -82,6 +82,11 @@ const ShopPage = () => {
     setWishlist(wishlist.filter(item => item.id !== productId));
   };
 
+  const moveToCart = (product) => {
+    addToCart(product);
+    removeFromWishlist(product.id);
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-KE', {
       style: 'currency',
@@ -90,11 +95,21 @@ const ShopPage = () => {
     }).format(price);
   };
 
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + item.price, 0);
+  };
+
+  const proceedToCheckout = () => {
+    // Implement checkout logic here
+    console.log("Proceeding to checkout");
+    // You would typically navigate to a checkout page here
+  };
+
   const styles = {
     container: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '4rem 1rem 1rem', // Increased top padding
+      padding: '4rem 1rem 1rem',
       fontFamily: 'Arial, sans-serif',
     },
     iconWrapper: {
@@ -245,6 +260,18 @@ const ShopPage = () => {
       marginBottom: '0.75rem',
       paddingBottom: '0.75rem',
       borderBottom: '1px solid #eee',
+      display: 'flex',
+      alignItems: 'center',
+    },
+    modalItemImage: {
+      width: '50px',
+      height: '50px',
+      objectFit: 'cover',
+      marginRight: '0.5rem',
+      borderRadius: '4px',
+    },
+    modalItemDetails: {
+      flex: 1,
     },
     modalItemName: {
       fontSize: '0.9rem',
@@ -265,6 +292,17 @@ const ShopPage = () => {
       fontSize: '0.8rem',
       marginTop: '0.5rem',
     },
+    moveToCartButton: {
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      padding: '0.25rem 0.5rem',
+      borderRadius: '4px',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '0.8rem',
+      marginTop: '0.5rem',
+      marginLeft: '0.5rem',
+    },
     closeButton: {
       width: '100%',
       backgroundColor: '#A31621',
@@ -274,6 +312,25 @@ const ShopPage = () => {
       border: 'none',
       cursor: 'pointer',
       marginTop: '1rem',
+    },
+    checkoutButton: {
+      width: '100%',
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      padding: '0.5rem',
+      borderRadius: '4px',
+      border: 'none',
+      cursor: 'pointer',
+      marginTop: '1rem',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+    },
+    totalPrice: {
+      fontSize: '1.2rem',
+      fontWeight: 'bold',
+      marginTop: '1rem',
+      textAlign: 'right',
+      color: '#A31621',
     },
   };
 
@@ -374,16 +431,28 @@ const ShopPage = () => {
               <h2 style={styles.modalTitle}>Your Cart</h2>
               {cart.map(item => (
                 <div key={item.id} style={styles.modalItem}>
-                  <p style={styles.modalItemName}>{item.name}</p>
-                  <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
-                  <button
-                    style={styles.removeButton}
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    Remove
-                  </button>
+                  <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.modalItemImage} />
+                  <div style={styles.modalItemDetails}>
+                    <p style={styles.modalItemName}>{item.name}</p>
+                    <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
+                    <button
+                      style={styles.removeButton}
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ))}
+              <div style={styles.totalPrice}>
+                Total: {formatPrice(calculateTotal())}
+              </div>
+              <button
+                style={styles.checkoutButton}
+                onClick={proceedToCheckout}
+              >
+                Proceed to Checkout
+              </button>
               <button
                 style={styles.closeButton}
                 onClick={() => setIsCartOpen(false)}
@@ -407,14 +476,23 @@ const ShopPage = () => {
               <h2 style={styles.modalTitle}>Your Wishlist</h2>
               {wishlist.map(item => (
                 <div key={item.id} style={styles.modalItem}>
-                  <p style={styles.modalItemName}>{item.name}</p>
-                  <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
-                  <button
-                    style={styles.removeButton}
-                    onClick={() => removeFromWishlist(item.id)}
-                  >
-                    Remove
-                  </button>
+                  <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.modalItemImage} />
+                  <div style={styles.modalItemDetails}>
+                    <p style={styles.modalItemName}>{item.name}</p>
+                    <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
+                    <button
+                      style={styles.removeButton}
+                      onClick={() => removeFromWishlist(item.id)}
+                    >
+                      Remove
+                    </button>
+                    <button
+                      style={styles.moveToCartButton}
+                      onClick={() => moveToCart(item)}
+                    >
+                      Move to Cart
+                    </button>
+                  </div>
                 </div>
               ))}
               <button

@@ -63,15 +63,15 @@ const AboutUs = () => {
               id: 1, 
               imageSrc: "/images/Screenshot 2025-01-17 154108.png",
               name: "Benson Emuget",
-              role: "Chief Executive Officer",
-              description: "John brings over 20 years of experience in sustainable technology and waste management to lead our team towards innovative solutions."
+              role: "Chief Executive Manager",
+              description: "Mr.Benson brings over 8years of experience in sustainable technology and waste management to lead our team towards innovative solutions."
             },
             { 
               id: 2, 
-              imageSrc: "/placeholder.svg?height=300&width=300&text=Jane+Smith",
-              name: "Jane Smith",
+              imageSrc: "",
+              name: "Naomi ",
               role: "Head of Research & Development",
-              description: "With a Ph.D. in Environmental Engineering, Jane spearheads our cutting-edge biodigester technology development."
+              description: "With 4years in Environmental Engineering, Naomi spearheads our cutting-edge biodigester technology development."
             },
             { 
               id: 3, 

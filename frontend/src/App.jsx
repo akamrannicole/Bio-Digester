@@ -10,6 +10,7 @@ import BlogPost from './pages/BlogPost';
 import ContactUs from './pages/ContactUs';
 import ShopPage from './pages/ShopPage';
 import ServicesPage from './pages/ServicesPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 const AppContent = () => {
   const location = useLocation();
@@ -35,6 +36,8 @@ const AppContent = () => {
         <Route path="/services/:service" element={<ServicesPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/admin/*" element={<AdminDashboard />} />
+        <Route path="/checkout" element={<CheckoutPage/>} />
+
       </Routes>
     </div>
   );

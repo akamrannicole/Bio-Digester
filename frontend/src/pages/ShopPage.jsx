@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import CheckoutPage from './CheckoutPage';
 
 const products = [
   {
@@ -8,7 +9,7 @@ const products = [
     category: 'tanks',
     price: 38500,
     image: 'https://s.alicdn.com/@sc04/kf/H8182e7671e774859a89f79bcd525516as.jpg',
-    description: 'High-capacity Biodigester Tank for large households serving 15people maximum.',
+    description: 'High-capacity Biodigester Tank for large households serving 15 people maximum.',
   },
   {
     id: 6,
@@ -38,12 +39,20 @@ const products = [
 
 const ShopPage = () => {
   const [filteredProducts, setFilteredProducts] = useState(products);
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  const [wishlist, setWishlist] = useState(() => {
+    const savedWishlist = localStorage.getItem('wishlist');
+    return savedWishlist ? JSON.parse(savedWishlist) : [];
+  });
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('name');
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showWishlist, setShowWishlist] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     let result = [...products];
@@ -66,16 +75,29 @@ const ShopPage = () => {
     setFilteredProducts(result);
   }, [filter, sort]);
 
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
   const addToCart = (product) => {
-    setCart([...cart, product]);
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem) {
+      setCart(cart.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      ));
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
   };
 
   const addToWishlist = (product) => {
-    setWishlist([...wishlist, product]);
-  };
-
-  const removeFromCart = (productId) => {
-    setCart(cart.filter(item => item.id !== productId));
+    if (!wishlist.find(item => item.id === product.id)) {
+      setWishlist([...wishlist, product]);
+    }
   };
 
   const removeFromWishlist = (productId) => {
@@ -95,26 +117,57 @@ const ShopPage = () => {
     }).format(price);
   };
 
-  const calculateTotal = () => {
-    return cart.reduce((total, item) => total + item.price, 0);
+  const incrementQuantity = (productId) => {
+    setCart(cart.map(item =>
+      item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+    ));
   };
 
-  const proceedToCheckout = () => {
-    // Implement checkout logic here
-    console.log("Proceeding to checkout");
-    // You would typically navigate to a checkout page here
+  const decrementQuantity = (productId) => {
+    setCart(cart.map(item =>
+      item.id === productId && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+    ).filter(item => item.quantity > 0));
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter(item => item.id !== productId));
+  };
+
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const handleCheckout = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setShowCheckout(true);
+    }, 2000); // Simulating a 2-second loading time
   };
 
   const styles = {
     container: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '4rem 1rem 1rem',
+      padding: '6rem 1rem 1rem',
       fontFamily: 'Arial, sans-serif',
+      display: 'flex',
+    },
+    mainContent: {
+      flex: 1,
+      marginRight: '20px',
+    },
+    sidebar: {
+      width: '300px',
+      backgroundColor: 'white',
+      padding: '1rem',
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      height: 'fit-content',
     },
     iconWrapper: {
       position: 'fixed',
-      top: '8rem',
+      top: '4.5rem',
       right: '1rem',
       display: 'flex',
       gap: '1rem',
@@ -189,7 +242,7 @@ const ShopPage = () => {
     },
     cardImage: {
       width: '100%',
-      height: '170px',
+      height: '160px',
       objectFit: 'cover',
     },
     cardContent: {
@@ -240,271 +293,360 @@ const ShopPage = () => {
       color: '#A31621',
       border: '1px solid #A31621',
     },
-    modal: {
-      position: 'fixed',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      width: '300px',
+    cartPage: {
+      backgroundColor: '#f8f8f8',
+      minHeight: '100vh',
+      padding: '2rem',
+    },
+    cartContainer: {
+      maxWidth: '800px',
+      margin: '0 auto',
       backgroundColor: 'white',
-      boxShadow: '-2px 0 5px rgba(0,0,0,0.1)',
-      padding: '1rem',
-      overflowY: 'auto',
+      borderRadius: '8px',
+      padding: '2rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
     },
-    modalTitle: {
-      fontSize: '1.2rem',
+    cartTitle: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      marginBottom: '2rem',
       color: '#A31621',
-      marginBottom: '1rem',
+      textAlign: 'center',
     },
-    modalItem: {
-      marginBottom: '0.75rem',
-      paddingBottom: '0.75rem',
+    cartItem: {
+      display: 'flex',
       borderBottom: '1px solid #eee',
+      padding: '1rem 0',
+      alignItems: 'center',
+    },
+    cartItemImage: {
+      width: '100px',
+      height: '100px',
+      objectFit: 'cover',
+      marginRight: '1rem',
+      borderRadius: '4px',
+    },
+    cartItemDetails: {
+      flex: 1,
+    },
+    cartItemTitle: {
+      fontSize: '1.1rem',
+      fontWeight: 'bold',
+      marginBottom: '0.5rem',
+    },
+    cartItemPrice: {
+      fontSize: '1rem',
+      color: '#A31621',
+      fontWeight: 'bold',
+    },
+    cartItemQuantity: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: '0.5rem',
+    },
+    quantityButton: {
+      backgroundColor: '#eee',
+      border: 'none',
+      width: '25px',
+      height: '25px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+    },
+    quantityDisplay: {
+      margin: '0 0.5rem',
+      fontSize: '1rem',
+    },
+    removeButton: {
+      backgroundColor: '#A31621',
+      color: 'white',
+      border: 'none',
+      padding: '0.25rem 0.5rem',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '0.8rem',
+      marginLeft: '0.5rem',
+    },
+    cartTotal: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      marginTop: '2rem',
+      textAlign: 'right',
+      color: '#A31621',
+    },
+    checkoutButton: {
+      backgroundColor: '#40E0D0', // Turquoise color
+      color: 'white',
+      border: 'none',
+      padding: '1rem 2rem',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '1.1rem',
+      fontWeight: 'bold',
+      marginTop: '1rem',
+      width: '100%',
+    },
+    backButton: {
+      backgroundColor: 'transparent',
+      color: '#A31621',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      marginTop: '1rem',
       display: 'flex',
       alignItems: 'center',
     },
-    modalItemImage: {
+    wishlistItem: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '1rem',
+      padding: '0.5rem',
+      backgroundColor: '#f8f8f8',
+      borderRadius: '4px',
+    },
+    wishlistItemImage: {
       width: '50px',
       height: '50px',
       objectFit: 'cover',
       marginRight: '0.5rem',
       borderRadius: '4px',
     },
-    modalItemDetails: {
+    wishlistItemDetails: {
       flex: 1,
     },
-    modalItemName: {
+    wishlistItemTitle: {
       fontSize: '0.9rem',
       fontWeight: 'bold',
-      color: 'black',
     },
-    modalItemPrice: {
+    wishlistItemPrice: {
       fontSize: '0.8rem',
-      color: 'black',
+      color: '#A31621',
     },
-    removeButton: {
-      backgroundColor: '#A31621',
-      color: 'white',
+    wishlistItemButtons: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem',
+    },
+    wishlistButton: {
       padding: '0.25rem 0.5rem',
-      borderRadius: '4px',
-      border: 'none',
-      cursor: 'pointer',
       fontSize: '0.8rem',
-      marginTop: '0.5rem',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      border: 'none',
     },
     moveToCartButton: {
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      padding: '0.25rem 0.5rem',
-      borderRadius: '4px',
-      border: 'none',
-      cursor: 'pointer',
-      fontSize: '0.8rem',
-      marginTop: '0.5rem',
-      marginLeft: '0.5rem',
-    },
-    closeButton: {
-      width: '100%',
       backgroundColor: '#A31621',
       color: 'white',
-      padding: '0.5rem',
-      borderRadius: '4px',
-      border: 'none',
-      cursor: 'pointer',
-      marginTop: '1rem',
     },
-    checkoutButton: {
-      width: '100%',
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      padding: '0.5rem',
-      borderRadius: '4px',
-      border: 'none',
-      cursor: 'pointer',
-      marginTop: '1rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-    },
-    totalPrice: {
-      fontSize: '1.2rem',
-      fontWeight: 'bold',
-      marginTop: '1rem',
-      textAlign: 'right',
+    removeFromWishlistButton: {
+      backgroundColor: 'white',
       color: '#A31621',
+      border: '1px solid #A31621',
+    },
+    loadingOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 9999,
+    },
+    loadingSpinner: {
+      width: '50px',
+      height: '50px',
+      border: '5px solid #f3f3f3',
+      borderTop: '5px solid #3498db',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
     },
   };
 
+  const CartPage = () => (
+    <div style={styles.cartPage}>
+      <div style={styles.cartContainer}>
+        <h1 style={styles.cartTitle}>Your Cart</h1>
+        
+        {cart.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <>
+            {cart.map(item => (
+              <div key={item.id} style={styles.cartItem}>
+                <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.cartItemImage} />
+                <div style={styles.cartItemDetails}>
+                  <h3 style={styles.cartItemTitle}>{item.name}</h3>
+                  <p style={styles.cartItemPrice}>{formatPrice(item.price)}</p>
+                  <div style={styles.cartItemQuantity}>
+                    <button style={styles.quantityButton} onClick={() => decrementQuantity(item.id)}>-</button>
+                    <span style={styles.quantityDisplay}>{item.quantity}</span>
+                    <button style={styles.quantityButton} onClick={() => incrementQuantity(item.id)}>+</button>
+                    <button style={styles.removeButton} onClick={() => removeFromCart(item.id)}>Remove</button>
+                  </div>
+                </div>
+                <div style={{ fontWeight: 'bold', marginLeft: 'auto' }}>
+                  {formatPrice(item.price * item.quantity)}
+                </div>
+              </div>
+            ))}
+            
+            <div style={styles.cartTotal}>
+              Total: {formatPrice(calculateTotal())}
+            </div>
+            <button style={styles.checkoutButton} onClick={handleCheckout}>
+              Proceed to Checkout
+            </button>
+          </>
+        )}
+        
+        <button 
+          onClick={() => setShowCart(false)} 
+          style={styles.backButton}
+        >
+          ← Back to Shop
+        </button>
+      </div>
+    </div>
+  );
+
+  const WishlistSidebar = () => (
+    <div style={styles.sidebar}>
+      <h2 style={{ ...styles.cartTitle, fontSize: '1.5rem' }}>Your Wishlist</h2>
+      {wishlist.length === 0 ? (
+        <p>Your wishlist is empty.</p>
+      ) : (
+        wishlist.map(item => (
+          <div key={item.id} style={styles.wishlistItem}>
+            <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.wishlistItemImage} />
+            <div style={styles.wishlistItemDetails}>
+              <h3 style={styles.wishlistItemTitle}>{item.name}</h3>
+              <p style={styles.wishlistItemPrice}>{formatPrice(item.price)}</p>
+            </div>
+            <div style={styles.wishlistItemButtons}>
+              <button
+                style={{ ...styles.wishlistButton, ...styles.moveToCartButton }}
+                onClick={() => moveToCart(item)}
+              >
+                Move to Cart
+              </button>
+              <button
+                style={{ ...styles.wishlistButton, ...styles.removeFromWishlistButton }}
+                onClick={() => removeFromWishlist(item.id)}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+
   return (
     <div style={{ backgroundColor: '#f8f8f8', minHeight: '100vh', padding: '1rem' }}>
-      <div style={styles.container}>
-        {/* Header */}
-        <div style={styles.iconWrapper}>
-          <div style={styles.iconBadge} onClick={() => setIsCartOpen(true)}>
-            <div style={styles.icon}>🛒</div>
-            {cart.length > 0 && (
-              <span style={styles.badge}>{cart.length}</span>
-            )}
-          </div>
-          <div style={styles.iconBadge} onClick={() => setIsWishlistOpen(true)}>
-            <div style={styles.icon}>❤️</div>
-            {wishlist.length > 0 && (
-              <span style={styles.badge}>{wishlist.length}</span>
-            )}
-          </div>
+      {isLoading && (
+        <div style={styles.loadingOverlay}>
+          <div style={styles.loadingSpinner}></div>
         </div>
-
-        {/* Filter and Sort */}
-        <div style={styles.filterSort}>
-          <div>
-            <label style={styles.label}>Filter by:</label>
-            <select
-              style={styles.select}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="all">All Products</option>
-              <option value="tanks">Tanks</option>
-              <option value="additives">Additives</option>
-              <option value="equipment">Equipment</option>
-              <option value="appliances">Appliances</option>
-              <option value="accessories">Accessories</option>
-            </select>
+      )}
+      {showCheckout ? (
+        <CheckoutPage cart={cart} total={calculateTotal()} />
+      ) : (
+        <div style={styles.container}>
+          {/* Header */}
+          <div style={styles.iconWrapper}>
+            <div style={styles.iconBadge} onClick={() => setShowCart(true)}>
+              <div style={styles.icon}>🛒</div>
+              {cart.length > 0 && (
+                <span style={styles.badge}>{cart.reduce((total, item) => total + item.quantity, 0)}</span>
+              )}
+            </div>
+            <div style={styles.iconBadge} onClick={() => setShowWishlist(!showWishlist)}>
+              <div style={styles.icon}>❤️</div>
+              {wishlist.length > 0 && (
+                <span style={styles.badge}>{wishlist.length}</span>
+              )}
+            </div>
           </div>
-          <div>
-            <label style={styles.label}>Sort by:</label>
-            <select
-              style={styles.select}
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option value="name">Name</option>
-              <option value="priceLow">Price: Low to High</option>
-              <option value="priceHigh">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
 
-        {/* Product Grid */}
-        <div style={styles.grid}>
-          {filteredProducts.map(product => (
-            <motion.div
-              key={product.id}
-              style={styles.card}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img src={product.image || "/placeholder.svg"} alt={product.name} style={styles.cardImage} />
-              <div style={styles.cardContent}>
-                <h3 style={styles.cardTitle}>{product.name}</h3>
-                <p style={styles.cardPrice}>{formatPrice(product.price)}</p>
-                <p style={styles.cardDescription}>{product.description}</p>
-                <div style={styles.buttonContainer}>
-                  <button
-                    onClick={() => addToCart(product)}
-                    style={{ ...styles.button, ...styles.cartButton }}
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    onClick={() => addToWishlist(product)}
-                    style={{ ...styles.button, ...styles.wishlistButton }}
-                  >
-                    ❤️
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Cart Modal */}
-        <AnimatePresence>
-          {isCartOpen && (
-            <motion.div
-              style={styles.modal}
-              initial={{ x: 300 }}
-              animate={{ x: 0 }}
-              exit={{ x: 300 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            >
-              <h2 style={styles.modalTitle}>Your Cart</h2>
-              {cart.map(item => (
-                <div key={item.id} style={styles.modalItem}>
-                  <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.modalItemImage} />
-                  <div style={styles.modalItemDetails}>
-                    <p style={styles.modalItemName}>{item.name}</p>
-                    <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
-                    <button
-                      style={styles.removeButton}
-                      onClick={() => removeFromCart(item.id)}
+          {showCart ? (
+            <CartPage />
+          ) : (
+            <>
+              <div style={styles.mainContent}>
+                {/* Filter and Sort */}
+                <div style={styles.filterSort}>
+                  <div>
+                    <label style={styles.label}>Filter by:</label>
+                    <select
+                      style={styles.select}
+                      value={filter}
+                      onChange={(e) => setFilter(e.target.value)}
                     >
-                      Remove
-                    </button>
+                      <option value="all">All Products</option>
+                      <option value="tanks">Tanks</option>
+                      <option value="additives">Additives</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={styles.label}>Sort by:</label>
+                    <select
+                      style={styles.select}
+                      value={sort}
+                      onChange={(e) => setSort(e.target.value)}
+                    >
+                      <option value="name">Name</option>
+                      <option value="priceLow">Price: Low to High</option>
+                      <option value="priceHigh">Price: High to Low</option>
+                    </select>
                   </div>
                 </div>
-              ))}
-              <div style={styles.totalPrice}>
-                Total: {formatPrice(calculateTotal())}
-              </div>
-              <button
-                style={styles.checkoutButton}
-                onClick={proceedToCheckout}
-              >
-                Proceed to Checkout
-              </button>
-              <button
-                style={styles.closeButton}
-                onClick={() => setIsCartOpen(false)}
-              >
-                Close
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Wishlist Modal */}
-        <AnimatePresence>
-          {isWishlistOpen && (
-            <motion.div
-              style={styles.modal}
-              initial={{ x: 300 }}
-              animate={{ x: 0 }}
-              exit={{ x: 300 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            >
-              <h2 style={styles.modalTitle}>Your Wishlist</h2>
-              {wishlist.map(item => (
-                <div key={item.id} style={styles.modalItem}>
-                  <img src={item.image || "/placeholder.svg"} alt={item.name} style={styles.modalItemImage} />
-                  <div style={styles.modalItemDetails}>
-                    <p style={styles.modalItemName}>{item.name}</p>
-                    <p style={styles.modalItemPrice}>{formatPrice(item.price)}</p>
-                    <button
-                      style={styles.removeButton}
-                      onClick={() => removeFromWishlist(item.id)}
+                {/* Product Grid */}
+                <div style={styles.grid}>
+                  {filteredProducts.map(product => (
+                    <motion.div
+                      key={product.id}
+                      style={styles.card}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      Remove
-                    </button>
-                    <button
-                      style={styles.moveToCartButton}
-                      onClick={() => moveToCart(item)}
-                    >
-                      Move to Cart
-                    </button>
-                  </div>
+                      <img src={product.image || "/placeholder.svg"} alt={product.name} style={styles.cardImage} />
+                      <div style={styles.cardContent}>
+                        <h3 style={styles.cardTitle}>{product.name}</h3>
+                        <p style={styles.cardPrice}>{formatPrice(product.price)}</p>
+                        <p style={styles.cardDescription}>{product.description}</p>
+                        <div style={styles.buttonContainer}>
+                          <button
+                            onClick={() => addToCart(product)}
+                            style={{ ...styles.button, ...styles.cartButton }}
+                          >
+                            Add to Cart
+                          </button>
+                          <button
+                            onClick={() => addToWishlist(product)}
+                            style={{ ...styles.button, ...styles.wishlistButton }}
+                          >
+                            ❤️
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-              ))}
-              <button
-                style={styles.closeButton}
-                onClick={() => setIsWishlistOpen(false)}
-              >
-                Close
-              </button>
-            </motion.div>
+              </div>
+              {showWishlist && <WishlistSidebar />}
+            </>
           )}
-        </AnimatePresence>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

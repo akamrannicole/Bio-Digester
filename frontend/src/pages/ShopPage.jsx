@@ -7,7 +7,7 @@ const products = [
     name: 'Biodigester Tank',
     category: 'tanks',
     price: 38500,
-    image: '/placeholder.svg?height=150&width=150&text=Biodigester+Tank',
+    image: '/placeholder.svg?height=200&width=200&text=Biodigester+Tank',
     description: 'High-capacity Biodigester Tank for large households.',
   },
   {
@@ -23,7 +23,7 @@ const products = [
     name: 'Waste Shredder',
     category: 'equipment',
     price: 65998.90,
-    image: '/placeholder.svg?height=150&width=150&text=Waste+Shredder',
+    image: '/placeholder.svg?height=200&width=200&text=Waste+Shredder',
     description: 'Industrial-grade Waste Shredder for preprocessing.',
   },
   {
@@ -31,7 +31,7 @@ const products = [
     name: 'Biogas Stove',
     category: 'appliances',
     price: 32998.90,
-    image: '/placeholder.svg?height=150&width=150&text=Biogas+Stove',
+    image: '/placeholder.svg?height=200&width=200&text=Biogas+Stove',
     description: 'Efficient Biogas Stove for biogas use.',
   },
   {
@@ -39,7 +39,7 @@ const products = [
     name: 'pH Testing Kit',
     category: 'accessories',
     price: 8798.90,
-    image: '/placeholder.svg?height=150&width=150&text=pH+Testing+Kit',
+    image: '/placeholder.svg?height=200&width=200&text=pH+Testing+Kit',
     description: 'Comprehensive pH Testing Kit for maintenance.',
   },
   {
@@ -47,7 +47,7 @@ const products = [
     name: 'Compact Biodigester',
     category: 'tanks',
     price: 164998.90,
-    image: '/placeholder.svg?height=150&width=150&text=Compact+Biodigester',
+    image: '/placeholder.svg?height=200&width=200&text=Compact+Biodigester',
     description: 'Space-saving Compact Biodigester for small households.',
   },
   {
@@ -55,7 +55,7 @@ const products = [
     name: 'Biogas Purifier',
     category: 'equipment',
     price: 87998.90,
-    image: '/placeholder.svg?height=150&width=150&text=Biogas+Purifier',
+    image: '/placeholder.svg?height=200&width=200&text=Biogas+Purifier',
     description: 'Advanced Biogas Purifier for enhanced gas quality.',
   },
   {
@@ -63,7 +63,7 @@ const products = [
     name: 'Anaerobic Bacteria Mix',
     category: 'additives',
     price: 4398.90,
-    image: '/placeholder.svg?height=150&width=150&text=Bacteria+Mix',
+    image: '/placeholder.svg?height=200&width=200&text=Bacteria+Mix',
     description: 'Selected blend of Anaerobic Bacteria for systems.',
   },
 ];
@@ -129,24 +129,25 @@ const ShopPage = () => {
       padding: '1rem',
       fontFamily: 'Arial, sans-serif',
     },
-    header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1rem',
-      padding: '0.5rem',
-      backgroundColor: '#A31621',
-      borderRadius: '8px',
-      color: 'white',
-    },
-    title: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      margin: 0,
-    },
-    iconContainer: {
+    iconWrapper: {
+      position: 'fixed',
+      top: '1rem',
+      right: '1rem',
       display: 'flex',
       gap: '1rem',
+      zIndex: 1000,
+    },
+    icon: {
+      fontSize: '24px',
+      backgroundColor: 'white',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
     },
     iconBadge: {
       position: 'relative',
@@ -154,10 +155,10 @@ const ShopPage = () => {
     },
     badge: {
       position: 'absolute',
-      top: '-8px',
-      right: '-8px',
-      backgroundColor: '#white',
-      color: '#A31621',
+      top: '-5px',
+      right: '-5px',
+      backgroundColor: '#A31621',
+      color: 'white',
       borderRadius: '50%',
       width: '20px',
       height: '20px',
@@ -191,58 +192,65 @@ const ShopPage = () => {
     },
     grid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-      gap: '1rem',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+      gap: '1.5rem',
     },
     card: {
       backgroundColor: 'white',
       borderRadius: '8px',
       overflow: 'hidden',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
     },
     cardImage: {
       width: '100%',
-      height: '150px',
+      height: '200px',
       objectFit: 'cover',
     },
     cardContent: {
-      padding: '0.75rem',
+      padding: '1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
     },
     cardTitle: {
-      fontSize: '1rem',
+      fontSize: '1.2rem',
       fontWeight: 'bold',
       marginBottom: '0.5rem',
-      color: '#A31621',
+      color: 'black',
     },
     cardPrice: {
-      fontSize: '0.9rem',
-      color: '#A31621',
+      fontSize: '1rem',
+      color: 'black',
       fontWeight: 'bold',
       marginBottom: '0.5rem',
     },
     cardDescription: {
-      fontSize: '0.8rem',
-      color: '#666',
+      fontSize: '0.9rem',
+      color: 'black',
       marginBottom: '0.75rem',
+      flexGrow: 1,
     },
     buttonContainer: {
       display: 'flex',
       justifyContent: 'space-between',
       gap: '0.5rem',
+      marginTop: 'auto',
     },
     button: {
-      padding: '0.4rem 0.75rem',
+      padding: '0.5rem 1rem',
       borderRadius: '4px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '0.8rem',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.25rem',
+      fontSize: '0.9rem',
+      fontWeight: 'bold',
     },
     cartButton: {
       backgroundColor: '#A31621',
       color: 'white',
+      flexGrow: 1,
     },
     wishlistButton: {
       backgroundColor: 'white',
@@ -273,11 +281,11 @@ const ShopPage = () => {
     modalItemName: {
       fontSize: '0.9rem',
       fontWeight: 'bold',
-      color: '#A31621',
+      color: 'black',
     },
     modalItemPrice: {
       fontSize: '0.8rem',
-      color: '#666',
+      color: 'black',
     },
     removeButton: {
       backgroundColor: '#A31621',
@@ -299,32 +307,28 @@ const ShopPage = () => {
       cursor: 'pointer',
       marginTop: '1rem',
     },
-    icon: {
-      fontSize: '24px',
-    },
   };
 
   return (
     <div style={{ backgroundColor: '#f8f8f8', minHeight: '100vh', padding: '1rem' }}>
       <div style={styles.container}>
-        <header style={styles.header}>
-          <h1 style={styles.title}>Biodigester Shop</h1>
-          <div style={styles.iconContainer}>
-            <div style={styles.iconBadge} onClick={() => setIsCartOpen(true)}>
-              <span style={styles.icon}>🛒</span>
-              {cart.length > 0 && (
-                <span style={styles.badge}>{cart.length}</span>
-              )}
-            </div>
-            <div style={styles.iconBadge} onClick={() => setIsWishlistOpen(true)}>
-              <span style={styles.icon}>❤️</span>
-              {wishlist.length > 0 && (
-                <span style={styles.badge}>{wishlist.length}</span>
-              )}
-            </div>
+        {/* Header */}
+        <div style={styles.iconWrapper}>
+          <div style={styles.iconBadge} onClick={() => setIsCartOpen(true)}>
+            <div style={styles.icon}>🛒</div>
+            {cart.length > 0 && (
+              <span style={styles.badge}>{cart.length}</span>
+            )}
           </div>
-        </header>
+          <div style={styles.iconBadge} onClick={() => setIsWishlistOpen(true)}>
+            <div style={styles.icon}>❤️</div>
+            {wishlist.length > 0 && (
+              <span style={styles.badge}>{wishlist.length}</span>
+            )}
+          </div>
+        </div>
 
+        {/* Filter and Sort */}
         <div style={styles.filterSort}>
           <div>
             <label style={styles.label}>Filter by:</label>
@@ -355,6 +359,7 @@ const ShopPage = () => {
           </div>
         </div>
 
+        {/* Product Grid */}
         <div style={styles.grid}>
           {filteredProducts.map(product => (
             <motion.div
@@ -388,6 +393,7 @@ const ShopPage = () => {
           ))}
         </div>
 
+        {/* Cart Modal */}
         <AnimatePresence>
           {isCartOpen && (
             <motion.div
@@ -420,6 +426,7 @@ const ShopPage = () => {
           )}
         </AnimatePresence>
 
+        {/* Wishlist Modal */}
         <AnimatePresence>
           {isWishlistOpen && (
             <motion.div

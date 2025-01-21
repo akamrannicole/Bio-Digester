@@ -367,10 +367,8 @@ const CheckoutPage = ({ cart, total }) => {
   }
 
   const cardOptions = [
-    { name: "visa", label: "Visa", icon: "https://www.svgrepo.com/show/508699/visa.svg" },
-    { name: "mastercard", label: "Mastercard", icon: "https://www.svgrepo.com/show/473856/mastercard.svg" },
-    { name: "amex", label: "American Express", icon: "https://www.svgrepo.com/show/473796/americanexpress.svg" },
-    { name: "discover", label: "Discover", icon: "https://www.svgrepo.com/show/473799/discover.svg" },
+    { name: "visa", label: "Visa", icon: "https://i.pinimg.com/736x/0f/a1/71/0fa171be7f8ba5bfa01f48bf6d1fa9de.jpg" },
+    { name: "mastercard", label: "Mastercard", icon: "https://i.pinimg.com/736x/1f/ac/51/1fac514f6ab975038894813aea7dc08f.jpg" },
   ]
 
   const PaymentMethodContent = () => {
@@ -587,12 +585,6 @@ const CheckoutPage = ({ cart, total }) => {
               Use same address for billing
             </label>
           </form>
-        </div>
-
-        {/* Shipping Options */}
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Shipping options</h2>
-          <p style={styles.sectionSubtitle}>Enter a shipping address to view shipping options.</p>
         </div>
 
         {/* Payment Options */}

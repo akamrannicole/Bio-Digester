@@ -1,81 +1,81 @@
-import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import TermsAndConditions from "./TermsAndConditions"
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import TermsAndConditions from "../components/TermsAndConditions";
 
 const CheckoutPage = ({ cart, total }) => {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState("")
-  const [createAccount, setCreateAccount] = useState(false)
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [country, setCountry] = useState("")
-  const [streetAddress, setStreetAddress] = useState("")
-  const [apartment, setApartment] = useState("")
-  const [city, setCity] = useState("")
-  const [phone, setPhone] = useState("")
-  const [sameAsBilling, setSameAsBilling] = useState(true)
-  const [note, setNote] = useState("")
-  const [agreeToTerms, setAgreeToTerms] = useState(false)
-  const [selectedPayment, setSelectedPayment] = useState("mpesa")
-  const [selectedCard, setSelectedCard] = useState("visa")
-  const [cardName, setCardName] = useState("")
-  const [cardNumber, setCardNumber] = useState("")
-  const [cardExpiry, setCardExpiry] = useState("")
-  const [cardCVC, setCardCVC] = useState("")
-  const [mpesaNumber, setMpesaNumber] = useState("")
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [orderSuccess, setOrderSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
-  const [showTerms, setShowTerms] = useState(false)
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [createAccount, setCreateAccount] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [country, setCountry] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [apartment, setApartment] = useState("");
+  const [city, setCity] = useState("");
+  const [phone, setPhone] = useState("");
+  const [sameAsBilling, setSameAsBilling] = useState(true);
+  const [note, setNote] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState("mpesa");
+  const [selectedCard, setSelectedCard] = useState("visa");
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCVC, setCardCVC] = useState("");
+  const [mpesaNumber, setMpesaNumber] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showTerms, setShowTerms] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     if (orderSuccess) {
       const timer = setTimeout(() => {
-        navigate("/")
-      }, 5000)
-      return () => clearTimeout(timer)
+        navigate("/");
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  }, [orderSuccess, navigate])
+  }, [orderSuccess, navigate]);
 
   const validateForm = () => {
     if (!email || !firstName || !lastName || !country || !streetAddress || !city) {
-      setErrorMessage("Please fill in all required fields.")
-      return false
+      setErrorMessage("Please fill in all required fields.");
+      return false;
     }
-    if (!agreeToTerms) {
-      setErrorMessage("Please agree to the Terms and Conditions.")
-      return false
+    if (!termsAccepted) {
+      setErrorMessage("Please read and accept the Terms and Conditions.");
+      return false;
     }
     if (selectedPayment === "mpesa" && !mpesaNumber) {
-      setErrorMessage("Please enter your M-PESA number.")
-      return false
+      setErrorMessage("Please enter your M-PESA number.");
+      return false;
     }
     if (selectedPayment === "card" && (!cardName || !cardNumber || !cardExpiry || !cardCVC)) {
-      setErrorMessage("Please fill in all card details.")
-      return false
+      setErrorMessage("Please fill in all card details.");
+      return false;
     }
-    setErrorMessage("")
-    return true
-  }
+    setErrorMessage("");
+    return true;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!validateForm()) return
+    e.preventDefault();
+    if (!validateForm()) return;
 
-    setIsProcessing(true)
+    setIsProcessing(true);
 
     try {
       switch (selectedPayment) {
         case "mpesa":
-          alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
-          await new Promise((resolve) => setTimeout(resolve, 5000))
-          break
+          alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`);
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+          break;
         case "card":
-          alert(`Processing card payment of KES ${total.toFixed(2)}...`)
-          await new Promise((resolve) => setTimeout(resolve, 3000))
-          break
+          alert(`Processing card payment of KES ${total.toFixed(2)}...`);
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          break;
         default:
-          break
+          break;
       }
 
       console.log("Order submitted:", {
@@ -95,20 +95,20 @@ const CheckoutPage = ({ cart, total }) => {
             selectedPayment === "mpesa"
               ? { phone: mpesaNumber }
               : selectedPayment === "card"
-                ? { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
-                : {},
+              ? { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
+              : {},
         },
         cart,
         total,
-      })
+      });
 
-      setOrderSuccess(true)
+      setOrderSuccess(true);
     } catch (error) {
-      setErrorMessage("Payment processing failed. Please try again.")
+      setErrorMessage("Payment processing failed. Please try again.");
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   const styles = {
     container: {
@@ -368,14 +368,14 @@ const CheckoutPage = ({ cart, total }) => {
       textDecoration: "underline",
       cursor: "pointer",
     },
-  }
+  };
 
   const cardOptions = [
     { name: "visa", label: "Visa", icon: "https://www.svgrepo.com/show/508699/visa.svg" },
     { name: "mastercard", label: "Mastercard", icon: "https://www.svgrepo.com/show/473856/mastercard.svg" },
     { name: "amex", label: "American Express", icon: "https://www.svgrepo.com/show/473796/americanexpress.svg" },
     { name: "discover", label: "Discover", icon: "https://www.svgrepo.com/show/473799/discover.svg" },
-  ]
+  ];
 
   const PaymentMethodContent = () => {
     switch (selectedPayment) {
@@ -393,7 +393,7 @@ const CheckoutPage = ({ cart, total }) => {
               />
             </div>
           </div>
-        )
+        );
       case "card":
         return (
           <div style={styles.paymentDetails}>
@@ -462,11 +462,11 @@ const CheckoutPage = ({ cart, total }) => {
               </div>
             </div>
           </div>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div style={styles.container}>
@@ -653,15 +653,14 @@ const CheckoutPage = ({ cart, total }) => {
           <label style={styles.checkbox}>
             <input
               type="checkbox"
-              checked={agreeToTerms}
-              onChange={(e) => setAgreeToTerms(e.target.checked)}
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
               required
             />
-            By proceeding with your purchase you agree to our{" "}
+            I have read and agree to the{" "}
             <span style={styles.termsLink} onClick={() => setShowTerms(true)}>
               Terms and Conditions
-            </span>{" "}
-            and Privacy Policy
+            </span>
           </label>
 
           {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>}
@@ -700,7 +699,7 @@ const CheckoutPage = ({ cart, total }) => {
               </div>
               <div style={styles.productPrice}>
                 {new Intl.NumberFormat("en-KE", { style: "currency", currency: "KES" }).format(
-                  item.price * item.quantity,
+                  item.price * item.quantity
                 )}
               </div>
             </div>
@@ -723,10 +722,43 @@ const CheckoutPage = ({ cart, total }) => {
         </div>
       </div>
 
-      {showTerms && <TermsAndConditions onClose={() => setShowTerms(false)} />}
+      {showTerms && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "2rem",
+              borderRadius: "8px",
+              maxWidth: "800px",
+              maxHeight: "80vh",
+              overflow: "auto",
+            }}
+          >
+            <TermsAndConditions
+              onClose={() => setShowTerms(false)}
+              onAccept={() => {
+                setShowTerms(false);
+                setTermsAccepted(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutPage
-
+export default CheckoutPage;

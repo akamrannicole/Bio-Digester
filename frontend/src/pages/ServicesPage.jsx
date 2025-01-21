@@ -1,43 +1,13 @@
-import React, { useState } from "react"
-import { useParams } from "react-router-dom"
+import React from "react"
+import { useParams, useNavigate } from "react-router-dom"
 
 const ServicesPage = () => {
   const { service } = useParams()
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const navigate = useNavigate()
 
-  const images = [
-    "/placeholder.svg?height=400&width=600&text=Installation+Image+1",
-    "/placeholder.svg?height=400&width=600&text=Installation+Image+2",
-    "/placeholder.svg?height=400&width=600&text=Installation+Image+3",
-  ]
-
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0
-    const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1
-    setCurrentIndex(newIndex)
+  const handleContactClick = () => {
+    navigate('/contact-us')
   }
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === images.length - 1
-    const newIndex = isLastSlide ? 0 : currentIndex + 1
-    setCurrentIndex(newIndex)
-  }
-
-  const ImageCarousel = () => (
-    <div style={styles.carouselContainer}>
-      <img
-        src={images[currentIndex] || "/placeholder.svg"}
-        alt={`Installation step ${currentIndex + 1}`}
-        style={styles.carouselImage}
-      />
-      <button onClick={goToPrevious} style={{ ...styles.carouselButton, ...styles.prevButton }}>
-        &lt;
-      </button>
-      <button onClick={goToNext} style={{ ...styles.carouselButton, ...styles.nextButton }}>
-        &gt;
-      </button>
-    </div>
-  )
 
   const renderService = () => {
     switch (service) {
@@ -48,7 +18,7 @@ const ServicesPage = () => {
             <div style={styles.contentWrapper}>
               <div style={styles.imageContainer}>
                 <img
-                  src="/placeholder.svg?height=400&width=600&text=Plastic+Septic+Tank"
+                  src="https://s.alicdn.com/@sc04/kf/Hb4536fb271ef4aa0b63607b3a782f881d.png_300x300.jpg"
                   alt="Plastic Septic Tank"
                   style={styles.image}
                 />
@@ -80,7 +50,7 @@ const ServicesPage = () => {
                     better waste decomposition and reducing environmental impact.
                   </p>
                 </section>
-                <button style={styles.ctaButton}>Request a Quote</button>
+                <button style={styles.ctaButton} onClick={handleContactClick}>Contact Us</button>
               </div>
             </div>
           </>
@@ -93,7 +63,7 @@ const ServicesPage = () => {
             <div style={styles.contentWrapper}>
               <div style={styles.imageContainer}>
                 <img
-                  src="/placeholder.svg?height=400&width=600&text=Biodigester+Enzymes"
+                  src="https://i.pinimg.com/736x/a6/6d/37/a66d37d6d19078a26457e9ffff9dfb2d.jpg"
                   alt="Biodigester Enzymes"
                   style={styles.image}
                 />
@@ -125,7 +95,7 @@ const ServicesPage = () => {
                     complex organic compounds, resulting in more efficient waste processing and increased biogas yield.
                   </p>
                 </section>
-                <button style={styles.ctaButton}>Shop Enzymes</button>
+                <button style={styles.ctaButton} onClick={handleContactClick}>Contact Us</button>
               </div>
             </div>
           </>
@@ -138,7 +108,7 @@ const ServicesPage = () => {
             <div style={styles.contentWrapper}>
               <div style={styles.imageContainer}>
                 <img
-                  src="/placeholder.svg?height=400&width=600&text=Waste+Water+Management"
+                  src="https://i.pinimg.com/736x/b3/27/52/b3275222938c693db73855dd06c32e94.jpg"
                   alt="Waste Water Management"
                   style={styles.image}
                 />
@@ -171,7 +141,7 @@ const ServicesPage = () => {
                     waste water but also explore possibilities for water reuse and recycling.
                   </p>
                 </section>
-                <button style={styles.ctaButton}>Get a Consultation</button>
+                <button style={styles.ctaButton} onClick={handleContactClick}>Contact Us</button>
               </div>
             </div>
           </>
@@ -209,7 +179,6 @@ const ServicesPage = () => {
                     <li style={styles.listItem}>System testing and commissioning</li>
                     <li style={styles.listItem}>User training and handover</li>
                   </ul>
-                  <ImageCarousel />
                 </section>
                 <section style={styles.section}>
                   <h2 style={styles.subtitle}>Why Choose Our Installation Service?</h2>
@@ -221,12 +190,9 @@ const ServicesPage = () => {
                     biodigester.
                   </p>
                 </section>
-                <button style={styles.ctaButton}>Schedule an Installation</button>
+                <button style={styles.ctaButton} onClick={handleContactClick}>Contact Us</button>
               </div>
             </div>
-            <section style={styles.section}>
-              <h2 style={styles.subtitle}>Installation Gallery</h2>
-            </section>
           </>
         )
 
@@ -235,7 +201,12 @@ const ServicesPage = () => {
     }
   }
 
-  return <div style={styles.pageContainer}>{renderService()}</div>
+  return (
+    <div style={styles.pageContainer}>
+      <div style={styles.diagonalOverlay} />
+      {renderService()}
+    </div>
+  )
 }
 
 const styles = {
@@ -245,15 +216,30 @@ const styles = {
     backgroundColor: "#ffffff",
     padding: "2rem",
     fontFamily: "Arial, sans-serif",
+    position: "relative",
+    overflow: "hidden",
+  },
+  diagonalOverlay: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: "50%",
+    height: "100%",
+    background: "#B31942",
+    transform: "skewX(-20deg) translateX(20%)",
+    zIndex: 1,
   },
   contentWrapper: {
     display: "flex",
     flexDirection: "row-reverse",
     gap: "2rem",
     marginBottom: "2rem",
+    position: "relative",
+    zIndex: 2,
   },
   textContent: {
     flex: 1,
+    color: "#ffffff",
   },
   imageContainer: {
     flex: 1,
@@ -263,19 +249,21 @@ const styles = {
   },
   title: {
     fontSize: "2.5rem",
-    color: "#006400",
+    color: "#B31942",
     marginBottom: "1rem",
     textAlign: "center",
+    position: "relative",
+    zIndex: 2,
   },
   subtitle: {
     fontSize: "1.8rem",
-    color: "#008000",
+    color: "#B31942",
     marginBottom: "1rem",
   },
   description: {
     fontSize: "1.1rem",
     lineHeight: 1.6,
-    color: "#333",
+    color: "#333333",
     marginBottom: "1.5rem",
   },
   image: {
@@ -294,13 +282,13 @@ const styles = {
   },
   listItem: {
     fontSize: "1.1rem",
-    color: "#333",
+    color: "#333333",
     marginBottom: "0.5rem",
     paddingLeft: "1.5rem",
     position: "relative",
   },
   ctaButton: {
-    backgroundColor: "#006400",
+    backgroundColor: "#B31942",
     color: "white",
     border: "none",
     padding: "0.75rem 1.5rem",
@@ -309,38 +297,10 @@ const styles = {
     fontWeight: "500",
     cursor: "pointer",
     transition: "all 0.3s ease",
-  },
-  carouselContainer: {
-    width: "100%",
-    maxWidth: "800px",
-    margin: "0 auto",
-    position: "relative",
-  },
-  carouselImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: "8px",
-  },
-  carouselButton: {
-    position: "absolute",
-    top: "50%",
-    transform: "translateY(-50%)",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "white",
-    border: "none",
-    padding: "10px",
-    cursor: "pointer",
-    fontSize: "18px",
-    borderRadius: "50%",
-    transition: "background-color 0.3s ease",
-  },
-  prevButton: {
-    left: "10px",
-  },
-  nextButton: {
-    right: "10px",
+    "&:hover": {
+      backgroundColor: "#8B1332",
+    },
   },
 }
 
 export default ServicesPage
-

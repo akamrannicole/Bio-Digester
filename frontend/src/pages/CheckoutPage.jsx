@@ -1,81 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import TermsAndConditions from "../components/TermsAndConditions";
+import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import TermsAndConditions from "../components/TermsAndConditions"
 
 const CheckoutPage = ({ cart, total }) => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [createAccount, setCreateAccount] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [country, setCountry] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
-  const [apartment, setApartment] = useState("");
-  const [city, setCity] = useState("");
-  const [phone, setPhone] = useState("");
-  const [sameAsBilling, setSameAsBilling] = useState(true);
-  const [note, setNote] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState("mpesa");
-  const [selectedCard, setSelectedCard] = useState("visa");
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCVC, setCardCVC] = useState("");
-  const [mpesaNumber, setMpesaNumber] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showTerms, setShowTerms] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [createAccount, setCreateAccount] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [country, setCountry] = useState("")
+  const [streetAddress, setStreetAddress] = useState("")
+  const [apartment, setApartment] = useState("")
+  const [city, setCity] = useState("")
+  const [phone, setPhone] = useState("")
+  const [sameAsBilling, setSameAsBilling] = useState(true)
+  const [note, setNote] = useState("")
+  const [selectedPayment, setSelectedPayment] = useState("mpesa")
+  const [selectedCard, setSelectedCard] = useState("visa")
+  const [cardName, setCardName] = useState("")
+  const [cardNumber, setCardNumber] = useState("")
+  const [cardExpiry, setCardExpiry] = useState("")
+  const [cardCVC, setCardCVC] = useState("")
+  const [mpesaNumber, setMpesaNumber] = useState("")
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [showTerms, setShowTerms] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value)
+  }
 
   useEffect(() => {
     if (orderSuccess) {
       const timer = setTimeout(() => {
-        navigate("/");
-      }, 5000);
-      return () => clearTimeout(timer);
+        navigate("/")
+      }, 5000)
+      return () => clearTimeout(timer)
     }
-  }, [orderSuccess, navigate]);
+  }, [orderSuccess, navigate])
 
   const validateForm = () => {
     if (!email || !firstName || !lastName || !country || !streetAddress || !city) {
-      setErrorMessage("Please fill in all required fields.");
-      return false;
+      setErrorMessage("Please fill in all required fields.")
+      return false
     }
     if (!termsAccepted) {
-      setErrorMessage("Please read and accept the Terms and Conditions.");
-      return false;
+      setErrorMessage("Please read and accept the Terms and Conditions.")
+      return false
     }
     if (selectedPayment === "mpesa" && !mpesaNumber) {
-      setErrorMessage("Please enter your M-PESA number.");
-      return false;
+      setErrorMessage("Please enter your M-PESA number.")
+      return false
     }
     if (selectedPayment === "card" && (!cardName || !cardNumber || !cardExpiry || !cardCVC)) {
-      setErrorMessage("Please fill in all card details.");
-      return false;
+      setErrorMessage("Please fill in all card details.")
+      return false
     }
-    setErrorMessage("");
-    return true;
-  };
+    setErrorMessage("")
+    return true
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    e.preventDefault()
+    if (!validateForm()) return
 
-    setIsProcessing(true);
+    setIsProcessing(true)
 
     try {
       switch (selectedPayment) {
         case "mpesa":
-          alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`);
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          break;
+          alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
+          await new Promise((resolve) => setTimeout(resolve, 5000))
+          break
         case "card":
-          alert(`Processing card payment of KES ${total.toFixed(2)}...`);
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          break;
+          alert(`Processing card payment of KES ${total.toFixed(2)}...`)
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+          break
         default:
-          break;
+          break
       }
 
       console.log("Order submitted:", {
@@ -95,20 +99,20 @@ const CheckoutPage = ({ cart, total }) => {
             selectedPayment === "mpesa"
               ? { phone: mpesaNumber }
               : selectedPayment === "card"
-              ? { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
-              : {},
+                ? { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
+                : {},
         },
         cart,
         total,
-      });
+      })
 
-      setOrderSuccess(true);
+      setOrderSuccess(true)
     } catch (error) {
-      setErrorMessage("Payment processing failed. Please try again.");
+      setErrorMessage("Payment processing failed. Please try again.")
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const styles = {
     container: {
@@ -175,6 +179,7 @@ const CheckoutPage = ({ cart, total }) => {
       borderRadius: "4px",
       border: "1px solid #ddd",
       fontSize: "0.9rem",
+      outline: "none",
     },
     select: {
       width: "100%",
@@ -183,6 +188,7 @@ const CheckoutPage = ({ cart, total }) => {
       border: "1px solid #ddd",
       fontSize: "0.9rem",
       backgroundColor: "white",
+      outline: "none",
     },
     checkbox: {
       display: "flex",
@@ -368,14 +374,14 @@ const CheckoutPage = ({ cart, total }) => {
       textDecoration: "underline",
       cursor: "pointer",
     },
-  };
+  }
 
   const cardOptions = [
     { name: "visa", label: "Visa", icon: "https://www.svgrepo.com/show/508699/visa.svg" },
     { name: "mastercard", label: "Mastercard", icon: "https://www.svgrepo.com/show/473856/mastercard.svg" },
     { name: "amex", label: "American Express", icon: "https://www.svgrepo.com/show/473796/americanexpress.svg" },
     { name: "discover", label: "Discover", icon: "https://www.svgrepo.com/show/473799/discover.svg" },
-  ];
+  ]
 
   const PaymentMethodContent = () => {
     switch (selectedPayment) {
@@ -388,12 +394,12 @@ const CheckoutPage = ({ cart, total }) => {
                 type="tel"
                 placeholder="Enter M-PESA number (254...)"
                 value={mpesaNumber}
-                onChange={(e) => setMpesaNumber(e.target.value)}
+                onChange={handleInputChange(setMpesaNumber)}
                 style={styles.input}
               />
             </div>
           </div>
-        );
+        )
       case "card":
         return (
           <div style={styles.paymentDetails}>
@@ -425,7 +431,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="text"
                 placeholder="Full name on card"
                 value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
+                onChange={handleInputChange(setCardName)}
                 style={styles.input}
               />
             </div>
@@ -435,7 +441,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="text"
                 placeholder="1234 5678 9012 3456"
                 value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
+                onChange={handleInputChange(setCardNumber)}
                 style={styles.input}
               />
             </div>
@@ -446,7 +452,7 @@ const CheckoutPage = ({ cart, total }) => {
                   type="text"
                   placeholder="MM/YY"
                   value={cardExpiry}
-                  onChange={(e) => setCardExpiry(e.target.value)}
+                  onChange={handleInputChange(setCardExpiry)}
                   style={styles.input}
                 />
               </div>
@@ -456,17 +462,17 @@ const CheckoutPage = ({ cart, total }) => {
                   type="text"
                   placeholder={selectedCard === "amex" ? "4 digits" : "3 digits"}
                   value={cardCVC}
-                  onChange={(e) => setCardCVC(e.target.value)}
+                  onChange={handleInputChange(setCardCVC)}
                   style={styles.input}
                 />
               </div>
             </div>
           </div>
-        );
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <div style={styles.container}>
@@ -492,7 +498,7 @@ const CheckoutPage = ({ cart, total }) => {
               type="email"
               placeholder="Email address"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange(setEmail)}
               required
               style={styles.input}
             />
@@ -513,7 +519,7 @@ const CheckoutPage = ({ cart, total }) => {
                   type="text"
                   placeholder="First name"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={handleInputChange(setFirstName)}
                   required
                   style={styles.input}
                 />
@@ -523,7 +529,7 @@ const CheckoutPage = ({ cart, total }) => {
                   type="text"
                   placeholder="Last name"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={handleInputChange(setLastName)}
                   required
                   style={styles.input}
                 />
@@ -531,7 +537,7 @@ const CheckoutPage = ({ cart, total }) => {
             </div>
 
             <div style={styles.formGroup}>
-              <select style={styles.select} required value={country} onChange={(e) => setCountry(e.target.value)}>
+              <select style={styles.select} required value={country} onChange={handleInputChange(setCountry)}>
                 <option value="">Country / Region</option>
                 <option value="KE">Kenya</option>
                 <option value="UG">Uganda</option>
@@ -544,7 +550,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="text"
                 placeholder="Street address"
                 value={streetAddress}
-                onChange={(e) => setStreetAddress(e.target.value)}
+                onChange={handleInputChange(setStreetAddress)}
                 required
                 style={styles.input}
               />
@@ -555,7 +561,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="text"
                 placeholder="Apartment, suite, unit, etc. (optional)"
                 value={apartment}
-                onChange={(e) => setApartment(e.target.value)}
+                onChange={handleInputChange(setApartment)}
                 style={styles.input}
               />
             </div>
@@ -565,7 +571,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="text"
                 placeholder="Town / City"
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
+                onChange={handleInputChange(setCity)}
                 required
                 style={styles.input}
               />
@@ -576,7 +582,7 @@ const CheckoutPage = ({ cart, total }) => {
                 type="tel"
                 placeholder="Phone (optional)"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handleInputChange(setPhone)}
                 style={styles.input}
               />
             </div>
@@ -642,7 +648,7 @@ const CheckoutPage = ({ cart, total }) => {
             <textarea
               placeholder="Add a note to your order"
               value={note}
-              onChange={(e) => setNote(e.target.value)}
+              onChange={handleInputChange(setNote)}
               style={{ ...styles.input, minHeight: "100px", resize: "vertical" }}
             />
           </div>
@@ -699,7 +705,7 @@ const CheckoutPage = ({ cart, total }) => {
               </div>
               <div style={styles.productPrice}>
                 {new Intl.NumberFormat("en-KE", { style: "currency", currency: "KES" }).format(
-                  item.price * item.quantity
+                  item.price * item.quantity,
                 )}
               </div>
             </div>
@@ -750,15 +756,16 @@ const CheckoutPage = ({ cart, total }) => {
             <TermsAndConditions
               onClose={() => setShowTerms(false)}
               onAccept={() => {
-                setShowTerms(false);
-                setTermsAccepted(true);
+                setShowTerms(false)
+                setTermsAccepted(true)
               }}
             />
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CheckoutPage;
+export default CheckoutPage
+

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import TermsAndConditions from "./TermsAndConditions"
 
 const CheckoutPage = ({ cart, total }) => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ const CheckoutPage = ({ cart, total }) => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [showTerms, setShowTerms] = useState(false)
 
   useEffect(() => {
     if (orderSuccess) {
@@ -65,13 +67,10 @@ const CheckoutPage = ({ cart, total }) => {
     try {
       switch (selectedPayment) {
         case "mpesa":
-          // Simulate MPESA STK push
           alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
-          // Simulate waiting for user to complete the MPESA transaction
           await new Promise((resolve) => setTimeout(resolve, 5000))
           break
         case "card":
-          // Simulate card processing
           alert(`Processing card payment of KES ${total.toFixed(2)}...`)
           await new Promise((resolve) => setTimeout(resolve, 3000))
           break
@@ -364,11 +363,18 @@ const CheckoutPage = ({ cart, total }) => {
       fontSize: "0.9rem",
       marginTop: "1rem",
     },
+    termsLink: {
+      color: "#006400",
+      textDecoration: "underline",
+      cursor: "pointer",
+    },
   }
 
   const cardOptions = [
-    { name: "visa", label: "Visa", icon: "https://i.pinimg.com/736x/0f/a1/71/0fa171be7f8ba5bfa01f48bf6d1fa9de.jpg" },
-    { name: "mastercard", label: "Mastercard", icon: "https://i.pinimg.com/736x/1f/ac/51/1fac514f6ab975038894813aea7dc08f.jpg" },
+    { name: "visa", label: "Visa", icon: "https://www.svgrepo.com/show/508699/visa.svg" },
+    { name: "mastercard", label: "Mastercard", icon: "https://www.svgrepo.com/show/473856/mastercard.svg" },
+    { name: "amex", label: "American Express", icon: "https://www.svgrepo.com/show/473796/americanexpress.svg" },
+    { name: "discover", label: "Discover", icon: "https://www.svgrepo.com/show/473799/discover.svg" },
   ]
 
   const PaymentMethodContent = () => {
@@ -383,7 +389,6 @@ const CheckoutPage = ({ cart, total }) => {
                 placeholder="Enter M-PESA number (254...)"
                 value={mpesaNumber}
                 onChange={(e) => setMpesaNumber(e.target.value)}
-                required
                 style={styles.input}
               />
             </div>
@@ -421,7 +426,6 @@ const CheckoutPage = ({ cart, total }) => {
                 placeholder="Full name on card"
                 value={cardName}
                 onChange={(e) => setCardName(e.target.value)}
-                required
                 style={styles.input}
               />
             </div>
@@ -432,7 +436,6 @@ const CheckoutPage = ({ cart, total }) => {
                 placeholder="1234 5678 9012 3456"
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
-                required
                 style={styles.input}
               />
             </div>
@@ -444,7 +447,6 @@ const CheckoutPage = ({ cart, total }) => {
                   placeholder="MM/YY"
                   value={cardExpiry}
                   onChange={(e) => setCardExpiry(e.target.value)}
-                  required
                   style={styles.input}
                 />
               </div>
@@ -455,7 +457,6 @@ const CheckoutPage = ({ cart, total }) => {
                   placeholder={selectedCard === "amex" ? "4 digits" : "3 digits"}
                   value={cardCVC}
                   onChange={(e) => setCardCVC(e.target.value)}
-                  required
                   style={styles.input}
                 />
               </div>
@@ -656,7 +657,11 @@ const CheckoutPage = ({ cart, total }) => {
               onChange={(e) => setAgreeToTerms(e.target.checked)}
               required
             />
-            By proceeding with your purchase you agree to our Terms and Conditions and Privacy Policy
+            By proceeding with your purchase you agree to our{" "}
+            <span style={styles.termsLink} onClick={() => setShowTerms(true)}>
+              Terms and Conditions
+            </span>{" "}
+            and Privacy Policy
           </label>
 
           {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>}
@@ -717,6 +722,8 @@ const CheckoutPage = ({ cart, total }) => {
           </div>
         </div>
       </div>
+
+      {showTerms && <TermsAndConditions onClose={() => setShowTerms(false)} />}
     </div>
   )
 }

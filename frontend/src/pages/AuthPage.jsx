@@ -1,25 +1,9 @@
-import React, { useState, createContext, useContext } from "react"
+import React, { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { FaGoogle, FaMicrosoft, FaApple } from "react-icons/fa"
 import { Eye, EyeOff } from "lucide-react"
-
-// UserContext definition
-export const UserContext = createContext(null)
-
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-
-  const login = (userData) => {
-    setUser(userData)
-  }
-
-  const logout = () => {
-    setUser(null)
-  }
-
-  return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>
-}
+import { UserContext } from "../context/UserContext"
 
 const PageContainer = styled.div`
   display: flex;
@@ -446,11 +430,7 @@ const AuthPageContent = () => {
 }
 
 const AuthPage = () => {
-  return (
-    <UserProvider>
-      <AuthPageContent />
-    </UserProvider>
-  )
+  return <AuthPageContent />
 }
 
 export default AuthPage

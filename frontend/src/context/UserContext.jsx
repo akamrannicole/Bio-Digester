@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext } from "react"
+import React, { createContext, useState, useContext, useEffect } from "react"
 
-// Create the UserContext
-const UserContext = createContext()
+// Create and export the UserContext
+export const UserContext = createContext()
 
 // Create a custom hook to use the UserContext
 export const useUser = () => {
@@ -12,21 +12,19 @@ export const useUser = () => {
   return context
 }
 
-// Create the UserProvider component
+// Create and export the UserProvider component
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
 
   // Function to log in a user
   const login = (userData) => {
     setUser(userData)
-    // You might want to store the user data in localStorage or sessionStorage here
     localStorage.setItem("user", JSON.stringify(userData))
   }
 
   // Function to log out a user
   const logout = () => {
     setUser(null)
-    // Clear the user data from localStorage or sessionStorage
     localStorage.removeItem("user")
   }
 
@@ -38,12 +36,11 @@ export const UserProvider = ({ children }) => {
   // Function to update user data
   const updateUser = (newData) => {
     setUser((prevUser) => ({ ...prevUser, ...newData }))
-    // Update the stored user data
     localStorage.setItem("user", JSON.stringify({ ...user, ...newData }))
   }
 
   // Effect to check for stored user data on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     const storedUser = localStorage.getItem("user")
     if (storedUser) {
       setUser(JSON.parse(storedUser))
@@ -63,5 +60,5 @@ export const UserProvider = ({ children }) => {
   return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
 }
 
-export default UserProvider
+
 

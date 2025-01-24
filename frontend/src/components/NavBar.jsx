@@ -1,12 +1,14 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { UserContext } from "../context/UserContext"
+import { useUser } from "../context/UserContext"
 
 const Navbar = () => {
   const navigate = useNavigate()
   const [isHovered, setIsHovered] = useState("")
   const [isServicesOpen, setIsServicesOpen] = useState(false)
-  const { user, logout } = useContext(UserContext)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const { user, logout } = useUser()
+  const userMenuRef = useRef(null)
 
   const services = [
     "Plastic septic tanks",
@@ -14,6 +16,19 @@ const Navbar = () => {
     "Waste Water management",
     "Bio digester installation",
   ]
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const styles = {
     nav: {
@@ -93,6 +108,31 @@ const Navbar = () => {
       fontSize: "0.9rem",
       fontWeight: "500",
       transition: "all 0.3s ease",
+    },
+    userMenu: {
+      position: "relative",
+    },
+    userMenuButton: {
+      backgroundColor: "transparent",
+      color: "#FFFFFF",
+      border: "none",
+      padding: "0.4rem 0.8rem",
+      borderRadius: "4px",
+      cursor: "pointer",
+      fontSize: "0.9rem",
+      fontWeight: "500",
+      transition: "all 0.3s ease",
+    },
+    userMenuDropdown: {
+      position: "absolute",
+      top: "100%",
+      right: "0",
+      background: "white",
+      borderRadius: "8px",
+      padding: "0.4rem",
+      marginTop: "0.4rem",
+      minWidth: "150px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
     },
   }
 
@@ -176,21 +216,33 @@ const Navbar = () => {
           )}
         </div>
         {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-            <span style={{ color: "white", fontSize: "0.9rem" }}>Welcome, {user.name}</span>
-            <button
-              onClick={logout}
-              style={{
-                ...styles.button,
-                backgroundColor: "transparent",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
-                color: "#FFFFFF",
-                padding: "0.4rem 0.8rem",
-                fontSize: "0.85rem",
-              }}
-            >
-              Logout
+          <div style={styles.userMenu} ref={userMenuRef}>
+            <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} style={styles.userMenuButton}>
+              {user.name}
             </button>
+            {isUserMenuOpen && (
+              <div style={styles.userMenuDropdown}>
+                <Link to="/profile" style={styles.dropdownItem} onClick={() => setIsUserMenuOpen(false)}>
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    logout()
+                    setIsUserMenuOpen(false)
+                  }}
+                  style={{
+                    ...styles.dropdownItem,
+                    width: "100%",
+                    textAlign: "left",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <Link

@@ -15,12 +15,6 @@ const CheckoutPage = ({ cart, total }) => {
   const [phone, setPhone] = useState("")
   const [sameAsBilling, setSameAsBilling] = useState(true)
   const [note, setNote] = useState("")
-  const [selectedPayment, setSelectedPayment] = useState("mpesa")
-  const [selectedCard, setSelectedCard] = useState("visa")
-  const [cardName, setCardName] = useState("")
-  const [cardNumber, setCardNumber] = useState("")
-  const [cardExpiry, setCardExpiry] = useState("")
-  const [cardCVC, setCardCVC] = useState("")
   const [mpesaNumber, setMpesaNumber] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
@@ -30,6 +24,15 @@ const CheckoutPage = ({ cart, total }) => {
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value)
+  }
+
+  const handlePhoneNumberChange = (e) => {
+    const input = e.target.value.replace(/\D/g, "")
+    let formatted = input
+    if (input.length > 0) {
+      formatted = `254${input.slice(-9)}`
+    }
+    setMpesaNumber(formatted)
   }
 
   useEffect(() => {
@@ -50,12 +53,8 @@ const CheckoutPage = ({ cart, total }) => {
       setErrorMessage("Please read and accept the Terms and Conditions.")
       return false
     }
-    if (selectedPayment === "mpesa" && !mpesaNumber) {
+    if (!mpesaNumber) {
       setErrorMessage("Please enter your M-PESA number.")
-      return false
-    }
-    if (selectedPayment === "card" && (!cardName || !cardNumber || !cardExpiry || !cardCVC)) {
-      setErrorMessage("Please fill in all card details.")
       return false
     }
     setErrorMessage("")
@@ -63,8 +62,6 @@ const CheckoutPage = ({ cart, total }) => {
   }
 
   const simulateSendToAdminDashboard = (orderData, paymentData) => {
-    // In a real-world scenario, this function would send data to the admin dashboard
-    // via WebSockets, server-sent events, or another real-time communication method
     console.log("Sending order data to admin dashboard:", orderData)
     console.log("Sending payment data to admin dashboard:", paymentData)
   }
@@ -76,25 +73,10 @@ const CheckoutPage = ({ cart, total }) => {
     setIsProcessing(true)
 
     try {
-      let paymentMethod = ""
-      let paymentDetails = {}
-
-      switch (selectedPayment) {
-        case "mpesa":
-          paymentMethod = "M-PESA"
-          paymentDetails = { phone: mpesaNumber }
-          alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
-          await new Promise((resolve) => setTimeout(resolve, 5000))
-          break
-        case "card":
-          paymentMethod = "Card"
-          paymentDetails = { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
-          alert(`Processing card payment of KES ${total.toFixed(2)}...`)
-          await new Promise((resolve) => setTimeout(resolve, 3000))
-          break
-        default:
-          break
-      }
+      const paymentMethod = "M-PESA"
+      const paymentDetails = { phone: mpesaNumber }
+      alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
+      await new Promise((resolve) => setTimeout(resolve, 5000))
 
       const orderData = {
         id: `ORD${Math.floor(Math.random() * 10000)}`,
@@ -340,31 +322,6 @@ const CheckoutPage = ({ cart, total }) => {
       borderRadius: "50%",
       animation: "spin 1s linear infinite",
     },
-    cardOptions: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "0.5rem",
-      marginBottom: "1rem",
-    },
-    cardOption: {
-      display: "flex",
-      alignItems: "center",
-      gap: "0.5rem",
-      padding: "0.5rem",
-      border: "1px solid #ddd",
-      borderRadius: "4px",
-      cursor: "pointer",
-      transition: "all 0.2s ease",
-    },
-    selectedCard: {
-      borderColor: "#006400",
-      backgroundColor: "#f7f7f7",
-    },
-    cardIcon: {
-      width: "32px",
-      height: "20px",
-      objectFit: "contain",
-    },
     successMessage: {
       position: "fixed",
       top: "50%",
@@ -387,104 +344,6 @@ const CheckoutPage = ({ cart, total }) => {
       textDecoration: "underline",
       cursor: "pointer",
     },
-  }
-
-  const cardOptions = [
-    { name: "visa", label: "Visa", icon: "https://www.svgrepo.com/show/508699/visa.svg" },
-    { name: "mastercard", label: "Mastercard", icon: "https://www.svgrepo.com/show/473856/mastercard.svg" },
-    { name: "amex", label: "American Express", icon: "https://www.svgrepo.com/show/473796/americanexpress.svg" },
-    { name: "discover", label: "Discover", icon: "https://www.svgrepo.com/show/473799/discover.svg" },
-  ]
-
-  const PaymentMethodContent = () => {
-    switch (selectedPayment) {
-      case "mpesa":
-        return (
-          <div style={styles.paymentDetails}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>M-PESA Phone Number</label>
-              <input
-                type="tel"
-                placeholder="Enter M-PESA number (254...)"
-                value={mpesaNumber}
-                onChange={handleInputChange(setMpesaNumber)}
-                style={styles.input}
-              />
-            </div>
-          </div>
-        )
-      case "card":
-        return (
-          <div style={styles.paymentDetails}>
-            <div style={styles.cardOptions}>
-              {cardOptions.map((card) => (
-                <div
-                  key={card.name}
-                  style={{
-                    ...styles.cardOption,
-                    ...(selectedCard === card.name ? styles.selectedCard : {}),
-                  }}
-                  onClick={() => setSelectedCard(card.name)}
-                >
-                  <input
-                    type="radio"
-                    name="cardType"
-                    id={card.name}
-                    checked={selectedCard === card.name}
-                    onChange={() => setSelectedCard(card.name)}
-                  />
-                  <img src={card.icon || "/placeholder.svg"} alt={card.label} style={styles.cardIcon} />
-                  <label htmlFor={card.name}>{card.label}</label>
-                </div>
-              ))}
-            </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Name on Card</label>
-              <input
-                type="text"
-                placeholder="Full name on card"
-                value={cardName}
-                onChange={handleInputChange(setCardName)}
-                style={styles.input}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Card Number</label>
-              <input
-                type="text"
-                placeholder="1234 5678 9012 3456"
-                value={cardNumber}
-                onChange={handleInputChange(setCardNumber)}
-                style={styles.input}
-              />
-            </div>
-            <div style={styles.inputGroup}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Expiry Date</label>
-                <input
-                  type="text"
-                  placeholder="MM/YY"
-                  value={cardExpiry}
-                  onChange={handleInputChange(setCardExpiry)}
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>{selectedCard === "amex" ? "CID" : "CVV"}</label>
-                <input
-                  type="text"
-                  placeholder={selectedCard === "amex" ? "4 digits" : "3 digits"}
-                  value={cardCVC}
-                  onChange={handleInputChange(setCardCVC)}
-                  style={styles.input}
-                />
-              </div>
-            </div>
-          </div>
-        )
-      default:
-        return null
-    }
   }
 
   return (
@@ -518,7 +377,7 @@ const CheckoutPage = ({ cart, total }) => {
           </div>
           <label style={styles.checkbox}>
             <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} />
-            Create an account with Biotech Africa
+            Create an account with MG Biodigesters
           </label>
         </div>
 
@@ -611,20 +470,8 @@ const CheckoutPage = ({ cart, total }) => {
         <div style={styles.section}>
           <h2 style={styles.sectionTitle}>Payment options</h2>
           <div style={styles.paymentSection}>
-            <div
-              style={{
-                ...styles.paymentOption,
-                ...(selectedPayment === "mpesa" ? styles.selectedPayment : {}),
-              }}
-              onClick={() => setSelectedPayment("mpesa")}
-            >
-              <input
-                type="radio"
-                name="payment"
-                id="mpesa"
-                checked={selectedPayment === "mpesa"}
-                onChange={() => setSelectedPayment("mpesa")}
-              />
+            <div style={{ ...styles.paymentOption, ...styles.selectedPayment }}>
+              <input type="radio" name="payment" id="mpesa" checked={true} readOnly />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/2560px-M-PESA_LOGO-01.svg.png"
                 alt="M-PESA"
@@ -632,26 +479,38 @@ const CheckoutPage = ({ cart, total }) => {
               />
               <label htmlFor="mpesa">Pay with M-PESA</label>
             </div>
-
-            <div
-              style={{
-                ...styles.paymentOption,
-                ...(selectedPayment === "card" ? styles.selectedPayment : {}),
-              }}
-              onClick={() => setSelectedPayment("card")}
-            >
-              <input
-                type="radio"
-                name="payment"
-                id="card"
-                checked={selectedPayment === "card"}
-                onChange={() => setSelectedPayment("card")}
-              />
-              <img src="https://www.svgrepo.com/show/508699/visa.svg" alt="Card" style={styles.paymentIcon} />
-              <label htmlFor="card">Pay with Card</label>
+            <div style={styles.paymentDetails}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>M-PESA Phone Number</label>
+                <div style={{ position: "relative" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: "8px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#666",
+                    }}
+                  >
+                    +254
+                  </span>
+                  <input
+                    type="tel"
+                    placeholder="7XX XXX XXX"
+                    value={mpesaNumber.slice(3)}
+                    onChange={(e) => {
+                      const input = e.target.value.replace(/\D/g, "")
+                      let formatted = input
+                      if (input.length > 0) {
+                        formatted = `254${input.slice(-9)}`
+                      }
+                      setMpesaNumber(formatted)
+                    }}
+                    style={{ ...styles.input, paddingLeft: "50px" }}
+                  />
+                </div>
+              </div>
             </div>
-
-            <PaymentMethodContent />
           </div>
         </div>
 

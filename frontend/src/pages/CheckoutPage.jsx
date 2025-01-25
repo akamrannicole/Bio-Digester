@@ -62,6 +62,13 @@ const CheckoutPage = ({ cart, total }) => {
     return true
   }
 
+  const simulateSendToAdminDashboard = (orderData, paymentData) => {
+    // In a real-world scenario, this function would send data to the admin dashboard
+    // via WebSockets, server-sent events, or another real-time communication method
+    console.log("Sending order data to admin dashboard:", orderData)
+    console.log("Sending payment data to admin dashboard:", paymentData)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validateForm()) return
@@ -69,12 +76,19 @@ const CheckoutPage = ({ cart, total }) => {
     setIsProcessing(true)
 
     try {
+      let paymentMethod = ""
+      let paymentDetails = {}
+
       switch (selectedPayment) {
         case "mpesa":
+          paymentMethod = "M-PESA"
+          paymentDetails = { phone: mpesaNumber }
           alert(`M-PESA prompt sent to ${mpesaNumber}. Please enter PIN to pay KES ${total.toFixed(2)}`)
           await new Promise((resolve) => setTimeout(resolve, 5000))
           break
         case "card":
+          paymentMethod = "Card"
+          paymentDetails = { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
           alert(`Processing card payment of KES ${total.toFixed(2)}...`)
           await new Promise((resolve) => setTimeout(resolve, 3000))
           break
@@ -82,29 +96,28 @@ const CheckoutPage = ({ cart, total }) => {
           break
       }
 
-      console.log("Order submitted:", {
-        contact: { email },
-        shipping: {
-          firstName,
-          lastName,
-          country,
-          streetAddress,
-          apartment,
-          city,
-          phone,
-        },
-        payment: {
-          method: selectedPayment,
-          details:
-            selectedPayment === "mpesa"
-              ? { phone: mpesaNumber }
-              : selectedPayment === "card"
-                ? { cardName, cardNumber, cardExpiry, cardCVC, cardType: selectedCard }
-                : {},
-        },
-        cart,
-        total,
-      })
+      const orderData = {
+        id: `ORD${Math.floor(Math.random() * 10000)}`,
+        customer: `${firstName} ${lastName}`,
+        email,
+        date: new Date().toISOString(),
+        total: total.toFixed(2),
+        status: "New",
+        items: cart,
+        shippingAddress: `${streetAddress}, ${apartment}, ${city}, ${country}`,
+      }
+
+      const paymentData = {
+        id: `PAY${Math.floor(Math.random() * 10000)}`,
+        orderId: orderData.id,
+        amount: total.toFixed(2),
+        date: new Date().toISOString(),
+        method: paymentMethod,
+        details: paymentDetails,
+        status: "Completed",
+      }
+
+      simulateSendToAdminDashboard(orderData, paymentData)
 
       setOrderSuccess(true)
     } catch (error) {

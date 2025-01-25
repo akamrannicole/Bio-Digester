@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react"
+import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { FaGoogle, FaMicrosoft, FaApple } from "react-icons/fa"
 import { Eye, EyeOff } from "lucide-react"
-import { UserContext } from "../context/UserContext"
+import { useUser } from "../context/UserContext"
 
 const PageContainer = styled.div`
   display: flex;
@@ -266,7 +266,8 @@ const AuthPageContent = () => {
     role: "",
   })
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const { login, user } = useContext(UserContext)
+  const [error, setError] = useState("")
+  const { login, user } = useUser()
   const navigate = useNavigate()
 
   const calculatePasswordStrength = (password) => {
@@ -293,16 +294,29 @@ const AuthPageContent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const userData = {
-      name: formData.username || formData.email.split("@")[0],
-      email: formData.email,
-      profilePicture: "/placeholder.svg?height=40&width=40&text=User",
-      role: formData.role || "user",
-    }
-    login(userData)
-    if (formData.role === "admin") {
-      navigate("/admin")
+    setError("")
+
+    if (formData.email === "mgbiodigesters@gmail.com") {
+      if (formData.password === "BensonEmuget") {
+        const userData = {
+          name: "Admin",
+          email: formData.email,
+          profilePicture: "/placeholder.svg?height=40&width=40&text=Admin",
+          role: "admin",
+        }
+        login(userData)
+        navigate("/admin")
+      } else {
+        setError("Invalid admin credentials")
+      }
     } else {
+      const userData = {
+        name: formData.username || formData.email.split("@")[0],
+        email: formData.email,
+        profilePicture: "/placeholder.svg?height=40&width=40&text=User",
+        role: "user",
+      }
+      login(userData)
       navigate("/")
     }
   }
@@ -325,6 +339,7 @@ const AuthPageContent = () => {
         <RightSection>
           <Title>{isLogin ? "Welcome Back" : "Create Account"}</Title>
           {user && isLogin && <WelcomeMessage>Welcome back, {user.name}!</WelcomeMessage>}
+          {error && <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>}
           <Form onSubmit={handleSubmit}>
             {!isLogin && (
               <FormGroup>
@@ -388,20 +403,6 @@ const AuthPageContent = () => {
               )}
             </FormGroup>
 
-            {!isLogin && (
-              <FormGroup>
-                <Label>
-                  Role
-                  <Required>*</Required>
-                </Label>
-                <Select name="role" value={formData.role} onChange={handleInputChange} required>
-                  <option value="">Select your role</option>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </Select>
-              </FormGroup>
-            )}
-
             <Button type="submit">{isLogin ? "Login" : "Sign Up"}</Button>
           </Form>
 
@@ -434,4 +435,3 @@ const AuthPage = () => {
 }
 
 export default AuthPage
-

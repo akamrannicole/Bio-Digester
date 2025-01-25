@@ -225,6 +225,9 @@ const Navbar = () => {
                 <Link to="/profile" style={styles.dropdownItem} onClick={() => setIsUserMenuOpen(false)}>
                   Profile
                 </Link>
+                <Link to="/auth" style={styles.dropdownItem} onClick={() => setIsUserMenuOpen(false)}>
+                  Admin
+                </Link>
                 <button
                   onClick={() => {
                     logout()
